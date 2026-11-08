@@ -3,93 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S&S Internacional C.A. - Sorteo Oficial</title>
+    <title>SSINTERNACIONAL - Super Combo Pack de Emprendedores</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Cabecera Corporativa -->
-    <header class="header-corp">
+    <div class="glow-bg"></div>
+    <header class="hero-header">
         <div class="logo-container">
-            <img src="logo.png" alt="S&S Internacional C.A." class="logo-img">
+            <img src="logo.png" alt="SSINTERNACIONAL Logo" class="main-logo">
         </div>
-        <div class="brand-title">
-            <h1>S&S INTERNACIONAL C.A.</h1>
-            <p>Plataforma Oficial de Sorteos Digitales</p>
-        </div>
+        <span class="badge-live">SORTEO OFICIAL ACTIVO</span>
+        <h1>SSINTERNACIONAL</h1>
+        <p class="subtitle">SUPER COMBO PACK DE EMPRENDEDORES</p>
     </header>
 
     <main class="container">
-
-        <!-- Banner / Flyer del Premio -->
-        <section class="card banner-card">
-            <div class="badge">🔥 SORTEO ACTIVO</div>
-            <div class="flyer-placeholder">
-                <img src="flyer-rifa.jpg" alt="Pack de Emprendedores S&S" id="flyerImg">
+        <!-- Flyer de la Rifa -->
+        <section class="flyer-card">
+            <div class="flyer-frame">
+                <img src="flyer-rifa.jpg" alt="Flyer Rifa S&S" class="flyer-img">
+            </div>
+            <div class="price-tag">
+                <span class="promo-label">Promoción Exclusiva</span>
+                <span class="price-value">10 Tickets = 300 Bs.f</span>
             </div>
         </section>
 
-        <!-- Contador en Tiempo Real -->
-        <section class="card counter-card">
-            <div class="counter-box">
-                <span class="counter-number" id="boletosDisponibles">9999</span>
-                <span class="counter-label">Boletos Disponibles en Tiempo Real</span>
+        <!-- Panel de Compra y Selección -->
+        <section class="purchase-panel">
+            <h2>Selecciona tus Boletos</h2>
+            <p class="instruction">Elige la cantidad de números que deseas adquirir:</p>
+
+            <div class="form-group">
+                <label for="ticketQuantity">Cantidad de Boletos:</label>
+                <select id="ticketQuantity" class="pro-select">
+                    <option value="10">10 Boletos - 300 Bs.f (1 Oportunidad)</option>
+                    <option value="20">20 Boletos - 600 Bs.f (2 Oportunidades)</option>
+                    <option value="30">30 Boletos - 900 Bs.f (3 Oportunidades)</option>
+                    <option value="50">50 Boletos - 1,500 Bs.f (5 Oportunidades)</option>
+                    <option value="100">100 Boletos - 3,000 Bs.f (Super Pack)</option>
+                </select>
             </div>
-        </section>
 
-        <!-- Paso 1: Selección de Boletos -->
-        <section class="card">
-            <h2>1. Selecciona tus boletos</h2>
-            <div class="ticket-selector">
-                <button type="button" class="btn-qty active" onclick="cambiarCantidad(10)">10 Boletos</button>
-                <button type="button" class="btn-qty" onclick="cambiarCantidad(20)">20 Boletos</button>
-                <button type="button" class="btn-qty" onclick="cambiarCantidad(50)">50 Boletos</button>
+            <div class="total-display">
+                <span>Total a Pagar:</span>
+                <strong id="totalPrice">300 Bs.f</strong>
             </div>
-            <p class="price-text">Boletos seleccionados: <strong id="cantBoletos">10</strong> | Total a pagar: <strong id="montoTotal">300</strong> Bs</p>
-        </section>
 
-        <!-- Paso 2: Datos del Comprador -->
-        <section class="card">
-            <h2>2. Tus Datos Personales</h2>
-            <form id="rifaForm">
-                <input type="text" id="nombre" placeholder="Nombre y Apellido" required>
-                <input type="text" id="cedula" placeholder="Cédula de Identidad" required>
-                <input type="tel" id="telefono" placeholder="Teléfono de Contacto (Ej: 04121234567)" required>
-                <input type="email" id="email" placeholder="Correo Electrónico" required>
-            </form>
-        </section>
-
-        <!-- Paso 3: Datos de Pago Móvil -->
-        <section class="card">
-            <h2>3. Realiza tu Pago Móvil</h2>
-            <div class="payment-info">
-                <p><strong>Banco:</strong> Banco de Venezuela (0102)</p>
-                <p><strong>Teléfono:</strong> 0412-1234567</p>
-                <p><strong>Cédula / RIF:</strong> V-12345678</p>
+            <div class="form-group">
+                <label for="paymentMethod">Método de Pago:</label>
+                <select id="paymentMethod" class="pro-select">
+                    <option value="pagomovil">Pago Móvil (BNC / Banco de Venezuela)</option>
+                    <option value="binance">Binance Pay (USDT)</option>
+                    <option value="zinli">Zinli</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="transferencia">Transferencia Bancaria Nacional</option>
+                </select>
             </div>
-            <input type="text" id="referencia" placeholder="Últimos 8 dígitos de la referencia" maxlength="8" required>
-            
-            <label for="capture" class="file-label">📎 Sube el capture de tu pago</label>
-            <input type="file" id="capture" accept="image/*" required>
 
-            <button type="button" class="btn-submit" onclick="enviarFormulario()">Registrar mi Compra</button>
+            <button id="buyButton" class="btn-pro">Reservar y Participar</button>
         </section>
-
-        <!-- Sección de Información Detallada Abajo -->
-        <section class="card info-card">
-            <h2>ℹ️ Información Detallada del Sorteo</h2>
-            <div class="details-content">
-                <p><strong>¿Cómo participar?</strong> Realiza el pago móvil correspondiente al paquete seleccionado (A partir de 10 números por tan solo 300 Bs.f), ingresa tus datos correctos y adjunta el comprobante.</p>
-                <p><strong>Asignación:</strong> Una vez verificado el pago por nuestro equipo administrativo, tus números en el rango del 0000 al 9999 te serán asignados de forma segura.</p>
-                <p><strong>Transparencia:</strong> Sorteo avalado bajo los estándares corporativos de S&S Internacional C.A. ¡Mucho éxito a todos los participantes!</p>
-            </div>
-        </section>
-
     </main>
 
-    <!-- Pie de página -->
-    <footer class="footer-corp">
-        <p>&copy; 2026 S&S Internacional C.A. Todos los derechos reservados.</p>
+    <footer>
+        <p>&copy; 2026 SSINTERNACIONAL C.A. Todos los derechos reservados.</p>
     </footer>
 
     <script src="app.js"></script>
