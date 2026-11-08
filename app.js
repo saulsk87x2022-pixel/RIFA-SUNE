@@ -1,9 +1,9 @@
+// ⚠️ PEGA TU URL REAL DE GOOGLE APPS SCRIPT AQUÍ ABAJO (Entre las comillas)
+const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
+
 // 1. Cargar el stock disponible al abrir la página web
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        // ⚠️ CAMBIA ESTO POR TU URL REAL DE GOOGLE APPS SCRIPT
-        const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec"; 
-
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
         
@@ -52,9 +52,6 @@ document.getElementById("buyButton").addEventListener("click", async function(ev
     btn.disabled = true;
 
     try {
-        // ⚠️ CAMBIA ESTO POR TU URL REAL DE GOOGLE APPS SCRIPT NUEVAMENTE
-        const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
-
         const response = await fetch(WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify(formData)
