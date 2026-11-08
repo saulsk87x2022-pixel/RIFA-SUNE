@@ -1,21 +1,6 @@
 // ⚠️ PEGA TU URL REAL DE GOOGLE APPS SCRIPT AQUÍ ABAJO (Entre las comillas)
 const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
 
-// Función global y directa para cambiar el precio total al instante
-window.cambiarPrecioTotal = function(val) {
-    const pricesMap = {
-        "10": "300 Bs.f",
-        "20": "600 Bs.f",
-        "30": "900 Bs.f",
-        "50": "1,500 Bs.f",
-        "100": "3,000 Bs.f"
-    };
-    const totalPriceElement = document.getElementById("totalPrice");
-    if (totalPriceElement) {
-        totalPriceElement.innerText = pricesMap[val] || "300 Bs.f";
-    }
-};
-
 // Función auxiliar para convertir la imagen del capture a Base64
 const convertFileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -26,8 +11,9 @@ const convertFileToBase64 = (file) => {
     });
 };
 
-// 1. Cargar stock inicial al abrir la página web
+// 1. Cargar stock inicial y activar el selector de precios dinámico
 window.addEventListener('DOMContentLoaded', async () => {
+    // Cargar stock disponible
     try {
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
@@ -40,6 +26,28 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (e) {
         console.log("Error cargando stock inicial:", e);
+    }
+
+    // Configurar el cambio de precio dinámico basado en los boletos seleccionados
+    const quantitySelect = document.getElementById("ticketQuantity");
+    const totalPriceElement = document.getElementById("totalPrice");
+
+    if (quantitySelect && totalPriceElement) {
+        const pricesMap = {
+            "10": "300 Bs.f",
+            "20": "600 Bs.f",
+            "30": "900 Bs.f",
+            "50": "1,500 Bs.f",
+            "100": "3,000 Bs.f"
+        };
+
+        const updatePrice = () => {
+            const val = quantitySelect.value;
+            totalPriceElement.innerText = pricesMap[val] || "300 Bs.f";
+        };
+
+        quantitySelect.addEventListener("change", updatePrice);
+        updatePrice(); // Ejecutar al cargar la página por si hay opción predeterminada
     }
 });
 
