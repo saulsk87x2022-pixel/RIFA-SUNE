@@ -11,8 +11,9 @@ const convertFileToBase64 = (file) => {
     });
 };
 
-// 1. Cargar el stock disponible al abrir la página web y configurar precios dinámicos
+// 1. Cargar stock inicial y configurar el cálculo de precios dinámico
 window.addEventListener('DOMContentLoaded', async () => {
+    // Cargar stock disponible
     try {
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
@@ -27,26 +28,27 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.log("Error cargando stock inicial:", e);
     }
 
-    // Actualizar precio total dinámicamente según la cantidad seleccionada
+    // Actualizar el precio total dinámicamente cuando cambie la cantidad de boletos
     const quantitySelect = document.getElementById("ticketQuantity");
     const totalPriceElement = document.getElementById("totalPrice");
 
     if (quantitySelect && totalPriceElement) {
         const updatePrice = () => {
             const qty = parseInt(quantitySelect.value);
-            let price = 300; // Precio base por 10 boletos
+            let price = 300; // Por defecto 10 boletos
             
-            if (qty === 20) price = 600;
+            if (qty === 10) price = 300;
+            else if (qty === 20) price = 600;
             else if (qty === 30) price = 900;
             else if (qty === 50) price = 1500;
             else if (qty === 100) price = 3000;
-            else price = (qty / 10) * 300;
+            else price = (qty / 10) * 300; // Cálculo proporcional por seguridad
 
             totalPriceElement.innerText = price.toLocaleString() + " Bs.f";
         };
 
         quantitySelect.addEventListener("change", updatePrice);
-        updatePrice();
+        updatePrice(); // Ejecutar al cargar la página
     }
 });
 
@@ -64,11 +66,11 @@ document.getElementById("buyButton").addEventListener("click", async function(ev
     const refInput = document.getElementById("paymentRef");
     const receiptInput = document.getElementById("paymentReceipt");
 
-    // Validamos campos obligatorios y que la referencia tenga exactamente 4 dígitos
+    // Validaciones obligatorias (Nombre, Cédula y Referencia de exactamente 4 dígitos)
     if (!fullNameInput || !fullNameInput.value.trim() || 
         !cedulaInput || !cedulaInput.value.trim() || 
         !refInput || refInput.value.trim().length !== 4) {
-        alert("Por favor completa tu Nombre, Cédula y asegúrate de que la Referencia tenga exactamente 4 dígitos.");
+        alert("Por favor completa tu Nombre, Cédula y asegúrate de que la Referencia de Pago tenga exactamente 4 dígitos.");
         return;
     }
 
@@ -81,7 +83,7 @@ document.getElementById("buyButton").addEventListener("click", async function(ev
         let imageBase64 = "";
         let imageName = "";
 
-        // Si adjuntó un capture, lo convertimos a Base64 para enviarlo a Google Sheets
+        // Convertir el comprobante (capture) a Base64 si se adjuntó
         if (receiptInput && receiptInput.files && receiptInput.files[0]) {
             const file = receiptInput.files[0];
             imageName = file.name;
