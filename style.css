@@ -42,7 +42,7 @@ body {
 
 .hero-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     width: 100%;
     max-width: 500px;
 }
@@ -97,6 +97,18 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.stock-banner {
+    background: #fffbeb;
+    border: 1px solid var(--border-gold);
+    color: #92400e;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
 }
 
 .flyer-card {
@@ -204,7 +216,7 @@ body {
     padding: 14px;
     font-size: 0.85rem;
     color: #78350f;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .payment-info-box h4 {
@@ -215,7 +227,26 @@ body {
 }
 
 .payment-info-box p {
-    margin: 3px 0;
+    margin: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.copy-btn {
+    background: var(--border-gold);
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.copy-btn:hover {
+    opacity: 0.85;
 }
 
 .total-display {
