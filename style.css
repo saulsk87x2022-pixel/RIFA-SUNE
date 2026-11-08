@@ -1,11 +1,11 @@
 :root {
-    --bg-deep: #070D1A;
-    --bg-card: #111B33;
-    --border-gold: #D4AF37;
-    --gold-gradient: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #AA771C 100%);
-    --text-main: #F8FAFC;
-    --text-muted: #94A3B8;
-    --accent-blue: #3B82F6;
+    --bg-deep: #0f172a;
+    --bg-card: #1e293b;
+    --border-gold: #fbbf24;
+    --gold-gradient: linear-gradient(135deg, #fde047 0%, #fbbf24 50%, #d97706 100%);
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --input-bg: #0b1329;
 }
 
 * {
@@ -22,21 +22,21 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 25px 15px;
     position: relative;
     overflow-x: hidden;
 }
 
 .glow-bg {
     position: absolute;
-    top: -100px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 600px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(59, 130, 246, 0.05) 60%, transparent 100%);
+    width: 500px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, rgba(59, 130, 246, 0.08) 70%, transparent 100%);
     z-index: -1;
-    filter: blur(50px);
+    filter: blur(40px);
 }
 
 .hero-header {
@@ -47,12 +47,12 @@ body {
 }
 
 .logo-container {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     margin: 0 auto 15px auto;
     border-radius: 50%;
     border: 3px solid var(--border-gold);
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.35);
     overflow: hidden;
     background: #000;
 }
@@ -64,7 +64,7 @@ body {
 }
 
 .badge-live {
-    background: rgba(212, 175, 55, 0.15);
+    background: rgba(251, 191, 36, 0.15);
     color: var(--border-gold);
     border: 1px solid var(--border-gold);
     padding: 6px 16px;
@@ -77,9 +77,9 @@ body {
 }
 
 .hero-header h1 {
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: 800;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -90,7 +90,6 @@ body {
     font-size: 0.95rem;
     color: var(--text-muted);
     font-weight: 600;
-    letter-spacing: 0.5px;
 }
 
 .container {
@@ -103,10 +102,10 @@ body {
 
 .flyer-card {
     background: var(--bg-card);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid rgba(251, 191, 36, 0.3);
     border-radius: 16px;
     padding: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     text-align: center;
 }
 
@@ -125,7 +124,7 @@ body {
 }
 
 .price-tag {
-    background: rgba(7, 13, 26, 0.8);
+    background: rgba(15, 23, 42, 0.8);
     border: 1px solid var(--border-gold);
     border-radius: 10px;
     padding: 10px;
@@ -149,10 +148,10 @@ body {
 
 .purchase-panel {
     background: var(--bg-card);
-    border: 1px solid rgba(212, 175, 55, 0.25);
+    border: 1px solid rgba(251, 191, 36, 0.25);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
 .purchase-panel h2 {
@@ -178,30 +177,56 @@ body {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-muted);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-.pro-select {
+.pro-input, .pro-select {
     width: 100%;
-    background: #070D1A;
-    border: 1px solid #2A3B5E;
+    background: var(--input-bg);
+    border: 1px solid #334155;
     color: var(--text-main);
     padding: 12px 14px;
     border-radius: 10px;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 500;
     outline: none;
     transition: all 0.3s ease;
 }
 
-.pro-select:focus {
+.pro-input:focus, .pro-select:focus {
     border-color: var(--border-gold);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+}
+
+.payment-info-box {
+    background: rgba(11, 19, 41, 0.95);
+    border: 1px dashed var(--border-gold);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.payment-info-box h4 {
+    color: var(--border-gold);
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.payment-info-box p {
+    margin: 3px 0;
+    color: var(--text-muted);
+}
+
+.payment-info-box strong {
+    color: var(--text-main);
 }
 
 .total-display {
-    background: rgba(7, 13, 26, 0.6);
-    border: 1px dashed #2A3B5E;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px dashed #334155;
     border-radius: 10px;
     padding: 14px;
     display: flex;
@@ -224,19 +249,19 @@ body {
 .btn-pro {
     width: 100%;
     background: var(--gold-gradient);
-    color: #070D1A;
+    color: #0f172a;
     border: none;
     padding: 14px;
     border-radius: 10px;
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.35);
     transition: transform 0.2s, opacity 0.2s;
 }
 
 .btn-pro:hover {
-    opacity: 0.9;
+    opacity: 0.95;
     transform: translateY(-2px);
 }
 
