@@ -1,22 +1,53 @@
-// --- EJEMPLO DE CÓMO DEBERÍA SER TU FUNCIÓN DE ENVÍO EN app.js ---
+// 1. Cargar el stock disponible al abrir la página web
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // REEMPLAZA AQUÍ CON TU URL DE GOOGLE APPS SCRIPT
+        const WEB_APP_URL = "AQUI_TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT"; 
 
-document.getElementById("buyButton").addEventListener("click", async function() {
-    // 1. Recoger los datos del formulario de la web
+        const response = await fetch(WEB_APP_URL + "?action=getStock");
+        const data = await response.json();
+        
+        if (data.availableStock !== undefined) {
+            // Busca el elemento del stock en tu HTML y lo actualiza en vivo
+            const stockElement = document.getElementById("availableStock"); // Asegúrate de que tu contador arriba tenga id="availableStock"
+            if (stockElement) {
+                stockElement.innerText = data.availableStock;
+            }
+        }
+    } catch (e) {
+        console.log("Stock inicial cargando por defecto.");
+    }
+});
+
+// 2. Evento del botón de compra
+document.getElementById("buyButton").addEventListener("click", async function(event) {
+    event.preventDefault(); // Evita comportamientos extraños del formulario
+
+    // Recogemos los valores de tus inputs (Asegúrate de que estos IDs existan en tu index.html)
+    const fullNameInput = document.getElementById("fullName");
+    const cedulaInput = document.getElementById("cedula");
+    const cantidadInput = document.getElementById("cantidad");
+
     const formData = {
-        fullName: document.getElementById("fullName").value, // (Asegúrate que coincida con el ID de tu input de nombre)
-        userCedula: document.getElementById("cedula").value,
-        ticketQuantity: document.getElementById("cantidad").value,
-        // ... los demás campos que ya tengas (teléfono, referencia, etc.)
+        fullName: fullNameInput ? fullNameInput.value : "",
+        userCedula: cedulaInput ? cedulaInput.value : "",
+        ticketQuantity: cantidadInput ? cantidadInput.value : "1"
     };
 
-    // 2. Mostrar un mensaje de carga en el botón
+    // Validamos que no estén vacíos
+    if (!formData.fullName || !formData.userCedula || !formData.ticketQuantity) {
+        alert("Por favor completa los campos requeridos.");
+        return;
+    }
+
     const btn = document.getElementById("buyButton");
     btn.innerText = "Procesando pago y asignando números...";
     btn.disabled = true;
 
     try {
-        // 3. Enviar a tu URL de Google Apps Script (tu Web App)
-        const response = await fetch("TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI", {
+        const WEB_APP_URL = "AQUI_TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT"; // REEMPLAZA AQUÍ TAMBIÉN
+
+        const response = await fetch(WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify(formData)
         });
@@ -24,7 +55,7 @@ document.getElementById("buyButton").addEventListener("click", async function() 
         const result = await response.json();
 
         if (result.status === "success") {
-            // 4. ¡AQUÍ ESTÁ LA MAGIA! Llamamos al modal para mostrar los números
+            // ¡Llamamos a nuestro modal corporativo con los números asignados!
             showSuccessPopup(formData, result);
         } else {
             alert("Error: " + (result.message || "No se pudo procesar la solicitud"));
@@ -34,27 +65,27 @@ document.getElementById("buyButton").addEventListener("click", async function() 
 
     } catch (error) {
         console.error("Error:", error);
-        alert("Ocurrió un error de conexión.");
+        alert("Ocurrió un error de conexión con el servidor.");
         btn.innerText = "Confirmar y Enviar Pago";
         btn.disabled = false;
     }
 });
 
-// 5. Esta función es la que inyecta los datos en el Modal HTML que acabamos de crear
+// 3. Función para inyectar datos en el Modal HTML
 function showSuccessPopup(formData, result) {
     document.getElementById('modalName').innerText = formData.fullName;
     document.getElementById('modalCedula').innerText = formData.userCedula;
     document.getElementById('modalQty').innerText = formData.ticketQuantity;
     
-    // Aquí es donde se colocan los números exactos devueltos por Google Sheets
+    // Aquí se pintan los números exactos que devuelve Google Sheets
     document.getElementById('modalNumbers').innerText = result.assignedNumbers;
     
-    // Mostramos el modal
+    // Muestra el modal en pantalla
     document.getElementById('successModal').style.display = 'flex';
 }
 
-// 6. Botón de cerrar el modal y recargar la página
+// 4. Botón de cerrar el modal y refrescar
 function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
-    location.reload(); // Refresca la página para que el stock baje en pantalla
+    location.reload(); // Recarga para actualizar el stock restado en pantalla
 }
