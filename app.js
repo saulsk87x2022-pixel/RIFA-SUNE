@@ -1,7 +1,7 @@
 // 1. Cargar el stock disponible al abrir la página web
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        // 👇 REEMPLAZA ESTA URL CON TU ENLACE REAL DE GOOGLE APPS SCRIPT 👇
+        // ⚠️ CAMBIA ESTO POR TU URL REAL DE GOOGLE APPS SCRIPT
         const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec"; 
 
         const response = await fetch(WEB_APP_URL + "?action=getStock");
@@ -52,7 +52,7 @@ document.getElementById("buyButton").addEventListener("click", async function(ev
     btn.disabled = true;
 
     try {
-        // 👇 REEMPLAZA ESTA URL CON TU ENLACE REAL DE GOOGLE APPS SCRIPT NUEVAMENTE 👇
+        // ⚠️ CAMBIA ESTO POR TU URL REAL DE GOOGLE APPS SCRIPT NUEVAMENTE
         const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
 
         const response = await fetch(WEB_APP_URL, {
