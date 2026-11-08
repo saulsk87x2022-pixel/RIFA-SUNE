@@ -1,11 +1,12 @@
 :root {
-    --bg-deep: #0f172a;
-    --bg-card: #1e293b;
-    --border-gold: #fbbf24;
-    --gold-gradient: linear-gradient(135deg, #fde047 0%, #fbbf24 50%, #d97706 100%);
-    --text-main: #f8fafc;
-    --text-muted: #cbd5e1;
-    --input-bg: #0b1329;
+    --bg-light: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-gold: #d97706;
+    --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --input-bg: #f8fafc;
+    --input-border: #cbd5e1;
 }
 
 * {
@@ -16,7 +17,7 @@
 }
 
 body {
-    background-color: var(--bg-deep);
+    background-color: var(--bg-light);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
@@ -34,7 +35,7 @@ body {
     transform: translateX(-50%);
     width: 500px;
     height: 250px;
-    background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, rgba(59, 130, 246, 0.08) 70%, transparent 100%);
+    background: radial-gradient(circle, rgba(217, 119, 6, 0.1) 0%, rgba(59, 130, 246, 0.05) 70%, transparent 100%);
     z-index: -1;
     filter: blur(40px);
 }
@@ -52,9 +53,9 @@ body {
     margin: 0 auto 15px auto;
     border-radius: 50%;
     border: 3px solid var(--border-gold);
-    box-shadow: 0 0 25px rgba(251, 191, 36, 0.35);
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
     overflow: hidden;
-    background: #000;
+    background: #fff;
 }
 
 .main-logo {
@@ -64,7 +65,7 @@ body {
 }
 
 .badge-live {
-    background: rgba(251, 191, 36, 0.15);
+    background: rgba(217, 119, 6, 0.1);
     color: var(--border-gold);
     border: 1px solid var(--border-gold);
     padding: 6px 16px;
@@ -80,9 +81,7 @@ body {
     font-size: 2.1rem;
     font-weight: 800;
     letter-spacing: 1px;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #0f172a;
     margin-bottom: 5px;
 }
 
@@ -102,10 +101,10 @@ body {
 
 .flyer-card {
     background: var(--bg-card);
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
     padding: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     text-align: center;
 }
 
@@ -124,8 +123,8 @@ body {
 }
 
 .price-tag {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid var(--border-gold);
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
     border-radius: 10px;
     padding: 10px;
     display: flex;
@@ -148,10 +147,10 @@ body {
 
 .purchase-panel {
     background: var(--bg-card);
-    border: 1px solid rgba(251, 191, 36, 0.25);
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .purchase-panel h2 {
@@ -176,14 +175,14 @@ body {
     display: block;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: var(--text-main);
     margin-bottom: 6px;
 }
 
-.pro-input, .pro-select {
+.pro-input, .pro-select, .pro-file {
     width: 100%;
     background: var(--input-bg);
-    border: 1px solid #334155;
+    border: 1px solid var(--input-border);
     color: var(--text-main);
     padding: 12px 14px;
     border-radius: 10px;
@@ -193,23 +192,23 @@ body {
     transition: all 0.3s ease;
 }
 
-.pro-input:focus, .pro-select:focus {
+.pro-input:focus, .pro-select:focus, .pro-file:focus {
     border-color: var(--border-gold);
-    box-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+    box-shadow: 0 0 8px rgba(217, 119, 6, 0.2);
 }
 
 .payment-info-box {
-    background: rgba(11, 19, 41, 0.95);
-    border: 1px dashed var(--border-gold);
+    background: #fffbeb;
+    border: 1px dashed #d97706;
     border-radius: 10px;
     padding: 14px;
     font-size: 0.85rem;
-    color: var(--text-main);
+    color: #78350f;
     line-height: 1.5;
 }
 
 .payment-info-box h4 {
-    color: var(--border-gold);
+    color: #b45309;
     margin-bottom: 6px;
     font-size: 0.9rem;
     font-weight: 700;
@@ -217,16 +216,11 @@ body {
 
 .payment-info-box p {
     margin: 3px 0;
-    color: var(--text-muted);
-}
-
-.payment-info-box strong {
-    color: var(--text-main);
 }
 
 .total-display {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px dashed #334155;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
     border-radius: 10px;
     padding: 14px;
     display: flex;
@@ -249,14 +243,14 @@ body {
 .btn-pro {
     width: 100%;
     background: var(--gold-gradient);
-    color: #0f172a;
+    color: #ffffff;
     border: none;
     padding: 14px;
     border-radius: 10px;
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.35);
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
     transition: transform 0.2s, opacity 0.2s;
 }
 
