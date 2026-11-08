@@ -51,7 +51,7 @@
             </div>
         </section>
 
-        <!-- Panel de Compra y Datos (Todo dentro de la tarjeta corporativa) -->
+        <!-- Panel de Compra y Datos -->
         <section class="purchase-panel">
             <h2>Participa en el Sorteo</h2>
             <p class="instruction">Completa tus datos y registra tu pago:</p>
@@ -123,17 +123,88 @@
                 </select>
             </div>
 
-            <!-- Recuadro informativo de Pago Móvil bien ajustado -->
-            <div id="paymentInfoBox" class="payment-info-box" style="background: #fffbeb; border: 1px solid #f59e0b; padding: 14px; border-radius: 8px; margin: 10px 0 14px 0; font-size: 13px; color: #92400e; line-height: 1.5; width: 100%; box-sizing: border-box;">
-                <strong style="display: block; margin-bottom: 4px;">📲 Datos para realizar tu Pago Móvil:</strong>
+            <!-- Recuadro informativo de Pago Móvil con espacio ventilado -->
+            <div id="paymentInfoBox" class="payment-info-box" style="background: #fffbeb; border: 1px solid #f59e0b; padding: 14px; border-radius: 8px; margin: 15px 0; font-size: 13px; color: #92400e; line-height: 1.6; width: 100%; box-sizing: border-box;">
+                <strong style="display: block; margin-bottom: 6px;">📲 Datos para realizar tu Pago Móvil:</strong>
                 • <strong>Banco:</strong> Banco Nacional de Crédito (0191)<br>
                 • <strong>Teléfono:</strong> 0414-XXXXXXX<br>
                 • <strong>Cédula:</strong> V-XXXXXXXX
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 15px;">
                 <label for="sourceBank">Banco Emisor (Desde donde envías):</label>
                 <select id="sourceBank" class="pro-select">
                     <option value="0102">0102 - Banco de Venezuela</option>
-                    <option value="0104">0104 - Banco Venezolano de Credito</option>
-                    <option value="0105">0105 -
+                    <option value="0104">0104 - Banco Venezolano de Crédito</option>
+                    <option value="0105">0105 - Banco Mercantil</option>
+                    <option value="0108">0108 - BBVA Provincial</option>
+                    <option value="0114">0114 - Bancaribe</option>
+                    <option value="0115">0115 - Banco Exterior</option>
+                    <option value="0128">0128 - Banco Caroní</option>
+                    <option value="0134">0134 - Banesco</option>
+                    <option value="0137">0137 - Banco Sofitasa</option>
+                    <option value="0138">0138 - Banco Plaza</option>
+                    <option value="0151">0151 - Fondo Común (BFC)</option>
+                    <option value="0156">0156 - 100% Banco</option>
+                    <option value="0157">0157 - DelSur Banco Universal</option>
+                    <option value="0163">0163 - Banco del Tesoro</option>
+                    <option value="0166">0166 - Banco Agrícola de Venezuela</option>
+                    <option value="0168">0168 - Bancrecer</option>
+                    <option value="0169">0169 - Banco R4</option>
+                    <option value="0171">0171 - Banco Activo</option>
+                    <option value="0172">0172 - Bancamiga</option>
+                    <option value="0174">0174 - Banplus</option>
+                    <option value="0175">0175 - Banco Bicentenario</option>
+                    <option value="0177">0177 - BANFANB</option>
+                    <option value="0191">0191 - Banco Nacional de Crédito (BNC)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentRef">Referencia de Pago (Últimos 4 dígitos):</label>
+                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+            </div>
+
+            <div class="form-group">
+                <label for="paymentReceipt">Adjuntar Capture del Comprobante:</label>
+                <input type="file" id="paymentReceipt" class="pro-file" accept="image/*">
+            </div>
+
+            <div class="total-display">
+                <span>Total a Pagar:</span>
+                <strong id="totalPrice">300 Bs.f</strong>
+            </div>
+
+            <button id="buyButton" class="btn-pro">Confirmar y Enviar Pago</button>
+        </section>
+
+        <!-- Sorteos Oficiales Avalados -->
+        <section class="official-draws">
+            <h3>SORTEOS OFICIALES AVALADOS</h3>
+            <p>Nuestros sorteos se basan en la lotería oficial del Estado Táchira</p>
+            <div class="draws-badges">
+                <div class="badge-item">🏛️ Lotería del Táchira</div>
+                <div class="badge-item">⭐ Super Gana</div>
+                <div class="badge-item">🎯 Conalot</div>
+                <div class="badge-item">🌐 SUR Rifas</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SSINTERNACIONAL C.A. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- MODAL DE ÉXITO Y PREVISUALIZACIÓN DE BOLETOS -->
+    <div id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #ffffff; max-width: 500px; width: 100%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            
+            <div style="background: #0f172a; color: #f8fafc; padding: 20px; text-align: center;">
+                <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #fbbf24;">S&S INTERNACIONAL C.A.</h3>
+                <p style="margin: 5px 0 0 0; font-size: 13px; color: #94a3b8;">¡Solicitud de Participación Registrada!</p>
+            </div>
+            
+            <div style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+                <div style="background: #ecfdf5; border: 1px solid #10b981; color: #065f46; padding: 10px 15px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; text-align: center; font-weight: 600;">
+                    ✅ ¡Tus números han sido apartados con éxito!
+                </div>
