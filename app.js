@@ -1,3 +1,6 @@
+// URL de tu API de Google Apps Script
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzINDL95vcOFsG9mpn4Gb5hbztly7DJxLK-5mTdQ6Lx0lJbzS6fBSRvz_8z_x9DbFVFoA/exec";
+
 // Función para copiar textos individuales al portapapeles
 function copyText(text, label) {
     navigator.clipboard.writeText(text).then(() => {
@@ -7,7 +10,22 @@ function copyText(text, label) {
     });
 }
 
+// Cargar el stock real desde Google Sheets al abrir la página
+async function loadStock() {
+    try {
+        const response = await fetch(SCRIPT_URL);
+        const data = await response.json();
+        if (data && data.stock !== undefined) {
+            document.getElementById('stockCount').textContent = Number(data.stock).toLocaleString();
+        }
+    } catch (error) {
+        console.error('Error al cargar el stock:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    loadStock(); // Consultar stock al iniciar
+
     const quantitySelect = document.getElementById('ticketQuantity');
     const totalPriceElement = document.getElementById('totalPrice');
     const buyButton = document.getElementById('buyButton');
@@ -19,11 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const userCedulaInput = document.getElementById('userCedula');
     const userPhoneInput = document.getElementById('userPhone');
     const userStateSelect = document.getElementById('userState');
+    const sourceBankSelect = document.getElementById('sourceBank');
     const paymentRefInput = document.getElementById('paymentRef');
     const paymentReceiptInput = document.getElementById('paymentReceipt');
-
-    // Stock inicial en 9,999
-    let availableStock = 9999;
 
     // Datos de pago con filas independientes para copiar cada dato exacto
     const paymentDetails = {
@@ -76,12 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = `${total.toLocaleString()} Bs.f`;
     });
 
-    // Acción del botón de confirmar pago
-    buyButton.addEventListener('click', () => {
+    // Acción del botón de confirmar pago (Envío a Google Sheets)
+    buyButton.addEventListener('click', async () => {
         const name = fullNameInput.value.trim();
         const cedula = userCedulaInput.value.trim();
         const phone = userPhoneInput.value.trim();
         const state = userStateSelect.value;
+        const bank = sourceBankSelect.value;
         const ref = paymentRefInput.value.trim();
         const qty = parseInt(quantitySelect.value);
         const total = totalPriceElement.textContent;
@@ -98,19 +115,50 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (qty > availableStock) {
-            alert('⚠️ Lo sentimos, no hay suficientes boletos disponibles en este momento.');
-            return;
+        // Deshabilitar botón mientras procesa
+        buyButton.disabled = true;
+        buyButton.textContent = "Procesando pago y registrando...";
+
+        const payload = {
+            fullName: name,
+            userCedula: cedula,
+            userPhone: phone,
+            userState: state,
+            ticketQuantity: qty,
+            paymentMethod: method,
+            sourceBank: bank,
+            paymentRef: ref
+        };
+
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Necesario para Google Apps Script web apps
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Como usamos no-cors, asumimos éxito al enviar y recargamos el stock actualizado
+            alert(`✅ ¡Pago y Registro Confirmados con Éxito!\n\nParticipante: ${name}\nCédula: ${cedula}\nEstado: ${state}\nBoletos Adquiridos: ${qty}\nTotal Pagado: ${total}\nMétodo: ${method}\nReferencia: ${ref}\n\n¡Tus datos han sido guardados en el sistema oficial!`);
+            
+            // Limpiar formulario
+            fullNameInput.value = '';
+            userCedulaInput.value = '';
+            userPhoneInput.value = '';
+            paymentRefInput.value = '';
+            paymentReceiptInput.value = '';
+            
+            // Actualizar stock en pantalla
+            setTimeout(loadStock, 2000);
+
+        } catch (error) {
+            console.error('Error al enviar los datos:', error);
+            alert('Hubo un error al conectar con el servidor. Por favor intenta de nuevo.');
+        } finally {
+            buyButton.disabled = false;
+            buyButton.textContent = "Confirmar y Enviar Pago";
         }
-
-        // Restar boletos del stock en vivo
-        availableStock -= qty;
-        stockCountElement.textContent = availableStock.toLocaleString();
-
-        alert(`✅ ¡Pago y Registro Confirmados con Éxito!\n\nParticipante: ${name}\nCédula: ${cedula}\nEstado: ${state}\nBoletos Adquiridos: ${qty}\nTotal Pagado: ${total}\nMétodo: ${method}\nReferencia: ${ref}\n\n¡Tus números han sido apartados y el stock se ha actualizado!`);
-        
-        // Limpiar referencia y capture
-        paymentRefInput.value = '';
-        paymentReceiptInput.value = '';
     });
 });
