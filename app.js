@@ -48,15 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span><strong>Correo:</strong> aliannis2502@gmail.com</span>
                 <button class="copy-btn" onclick="copyText('aliannis2502@gmail.com', 'Correo')">Copiar</button>
             </div>
-            <p style="margin-top:8px; font-size:0.8rem; color:#94a3b8;">Envía el monto exacto en USDT y adjunta tu comprobante.</p>
+            <p style="margin-top:8px; font-size:0.8rem; color:#78350f;">Envía el monto exacto en USDT y adjunta tu comprobante.</p>
         `,
         zinli: `
             <h4>💳 Zinli</h4>
-            <p style="color:#94a3b8;">Este método se encuentra bloqueado temporalmente.</p>
+            <p style="color:#78350f;">Este método se encuentra bloqueado temporalmente.</p>
         `,
         paypal: `
             <h4>🅿️ PayPal</h4>
-            <p style="color:#94a3b8;">Este método se encuentra bloqueado temporalmente.</p>
+            <p style="color:#78350f;">Este método se encuentra bloqueado temporalmente.</p>
         `
     };
 
