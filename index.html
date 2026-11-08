@@ -191,5 +191,51 @@
     </footer>
 
     <script src="app.js"></script>
+<footer>
+        <p>&copy; 2026 SSINTERNACIONAL C.A. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- MODAL DE ÉXITO Y PREVISUALIZACIÓN DE BOLETOS -->
+    <div id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #ffffff; max-width: 500px; width: 100%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            
+            <div style="background: #0f172a; color: #f8fafc; padding: 20px; text-align: center;">
+                <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #fbbf24;">S&S INTERNACIONAL C.A.</h3>
+                <p style="margin: 5px 0 0 0; font-size: 13px; color: #94a3b8;">¡Solicitud de Participación Registrada!</p>
+            </div>
+            
+            <div style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+                <div style="background: #ecfdf5; border: 1px solid #10b981; color: #065f46; padding: 10px 15px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; text-align: center; font-weight: 600;">
+                    ✅ ¡Tus números han sido apartados con éxito!
+                </div>
+                
+                <div style="font-size: 14px; color: #334155; line-height: 1.6;">
+                    <p style="margin: 6px 0;"><strong>Participante:</strong> <span id="modalName"></span></p>
+                    <p style="margin: 6px 0;"><strong>Cédula:</strong> <span id="modalCedula"></span></p>
+                    <p style="margin: 6px 0;"><strong>Cantidad de Boletos:</strong> <span id="modalQty"></span></p>
+                    <p style="margin: 6px 0;"><strong>Estatus:</strong> <span style="color: #d97706; font-weight: bold;">Pendiente de Verificación</span></p>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <label style="font-size: 13px; font-weight: bold; color: #475569; display: block; margin-bottom: 5px;">Tus Números Asignados (Previsualización):</label>
+                    <div id="modalNumbers" style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #1e293b; max-height: 120px; overflow-y: auto; text-align: center; word-break: break-all;">
+                        Cargando números...
+                    </div>
+                </div>
+
+                <p style="font-size: 12px; color: #64748b; margin-top: 15px; text-align: center;">
+                    * Tu compra pasará a revisión. Una vez verificado el pago, tu estatus cambiará a Aprobado.
+                </p>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 15px 20px; text-align: center;">
+                <button onclick="closeSuccessModal()" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer;">
+                    Entendido / Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
