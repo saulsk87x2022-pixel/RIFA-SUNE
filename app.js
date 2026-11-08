@@ -1,36 +1,25 @@
-let cantidadSeleccionada = 10;
-const precioPorBoleto = 30; // 10 boletos por 300 Bs -> 30 Bs c/u
-let boletosDisponiblesTotales = 9999; 
+document.addEventListener('DOMContentLoaded', () => {
+    const quantitySelect = document.getElementById('ticketQuantity');
+    const totalPriceElement = document.getElementById('totalPrice');
+    const buyButton = document.getElementById('buyButton');
+    const paymentMethodSelect = document.getElementById('paymentMethod');
 
-function cambiarCantidad(num) {
-    cantidadSeleccionada = num;
-    document.getElementById('cantBoletos').innerText = num;
-    document.getElementById('montoTotal').innerText = num * precioPorBoleto;
-}
+    // Actualizar precio automáticamente al cambiar la cantidad
+    quantitySelect.addEventListener('change', (e) => {
+        const qty = parseInt(e.target.value);
+        // Base: 10 tickets = 300 Bs.f (30 Bs por ticket)
+        const unitPrice = 30;
+        const total = qty * unitPrice;
+        
+        totalPriceElement.textContent = `${total.toLocaleString()} Bs.f`;
+    });
 
-function enviarFormulario() {
-    const nombre = document.getElementById('nombre').value.trim();
-    const cedula = document.getElementById('cedula').value.trim();
-    const telefono = document.getElementById('telefono').value.trim();
-    const referencia = document.getElementById('referencia').value.trim();
+    // Acción del botón de compra
+    buyButton.addEventListener('click', () => {
+        const qty = quantitySelect.value;
+        const total = totalPriceElement.textContent;
+        const method = paymentMethodSelect.options[paymentMethodSelect.selectedIndex].text;
 
-    if (!nombre || !cedula || !telefono || !referencia) {
-        alert("⚠️ Por favor completa todos los campos obligatorios y la referencia de pago.");
-        return;
-    }
-
-    if (referencia.length < 8) {
-        alert("⚠️ La referencia de pago debe tener 8 dígitos.");
-        return;
-    }
-
-    if (boletosDisponiblesTotales >= cantidadSeleccionada) {
-        boletosDisponiblesTotales -= cantidadSeleccionada;
-        document.getElementById('boletosDisponibles').innerText = boletosDisponiblesTotales;
-    }
-
-    alert(`¡Excelente, ${nombre}! Tu registro ha sido procesado con éxito.\nHemos recibido tu solicitud por ${cantidadSeleccionada} boleto(s).\n\nPronto validaremos tu pago móvil y te enviaremos tus números.`);
-    
-    document.getElementById('rifaForm').reset();
-    cambiarCantidad(10);
-}
+        alert(`¡Excelente elección!\n\nHas seleccionado: ${qty} Boletos\nTotal: ${total}\nMétodo de pago: ${method}\n\nSerás redirigido para confirmar tu pago y apartar tus números.`);
+    });
+});
