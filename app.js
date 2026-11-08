@@ -1,7 +1,7 @@
-// Función global para copiar textos fácilmente
+// Función para copiar textos individuales al portapapeles
 function copyText(text, label) {
     navigator.clipboard.writeText(text).then(() => {
-        alert(`📋 ¡${label} copiado al portapapeles!\n\n"${text}"`);
+        alert(`📋 ¡${label} copiado exitosamente!\n\n"${text}"`);
     }).catch(err => {
         console.error('Error al copiar: ', err);
     });
@@ -18,32 +18,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullNameInput = document.getElementById('fullName');
     const userCedulaInput = document.getElementById('userCedula');
     const userPhoneInput = document.getElementById('userPhone');
+    const userStateSelect = document.getElementById('userState');
     const paymentRefInput = document.getElementById('paymentRef');
     const paymentReceiptInput = document.getElementById('paymentReceipt');
 
-    // Stock simulado inicial de boletos disponibles
-    let availableStock = 840;
+    // Stock inicial en 9,999
+    let availableStock = 9999;
 
-    // Datos oficiales de pago con botones de copiar integrados
+    // Datos de pago con filas independientes para copiar cada dato exacto
     const paymentDetails = {
         pagomovil: `
             <h4>📱 Datos para Pago Móvil</h4>
-            <p><span><strong>Banco:</strong> Banco de Venezuela (0102)</span></p>
-            <p><span><strong>Teléfono:</strong> 04241593168</span> <button class="copy-btn" onclick="copyText('04241593168', 'Teléfono')">Copiar</button></p>
-            <p><span><strong>Cédula:</strong> 25887840</span> <button class="copy-btn" onclick="copyText('25887840', 'Cédula')">Copiar</button></p>
+            <div class="payment-row">
+                <span><strong>Banco:</strong> Banco de Venezuela (0102)</span>
+                <button class="copy-btn" onclick="copyText('0102', 'Banco')">Copiar</button>
+            </div>
+            <div class="payment-row">
+                <span><strong>Teléfono:</strong> 04241593168</span>
+                <button class="copy-btn" onclick="copyText('04241593168', 'Teléfono')">Copiar</button>
+            </div>
+            <div class="payment-row">
+                <span><strong>Cédula:</strong> 25887840</span>
+                <button class="copy-btn" onclick="copyText('25887840', 'Cédula')">Copiar</button>
+            </div>
         `,
         binance: `
             <h4>🟡 Datos para Binance Pay (USDT)</h4>
-            <p><span><strong>Correo / Pay ID:</strong> aliannis2502@gmail.com</span> <button class="copy-btn" onclick="copyText('aliannis2502@gmail.com', 'Correo')">Copiar</button></p>
-            <p>Envía el monto exacto en USDT y adjunta tu comprobante.</p>
+            <div class="payment-row">
+                <span><strong>Correo:</strong> aliannis2502@gmail.com</span>
+                <button class="copy-btn" onclick="copyText('aliannis2502@gmail.com', 'Correo')">Copiar</button>
+            </div>
+            <p style="margin-top:8px; font-size:0.8rem; color:#94a3b8;">Envía el monto exacto en USDT y adjunta tu comprobante.</p>
         `,
         zinli: `
             <h4>💳 Zinli</h4>
-            <p>Este método se encuentra bloqueado temporalmente.</p>
+            <p style="color:#94a3b8;">Este método se encuentra bloqueado temporalmente.</p>
         `,
         paypal: `
             <h4>🅿️ PayPal</h4>
-            <p>Este método se encuentra bloqueado temporalmente.</p>
+            <p style="color:#94a3b8;">Este método se encuentra bloqueado temporalmente.</p>
         `
     };
 
@@ -68,14 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = fullNameInput.value.trim();
         const cedula = userCedulaInput.value.trim();
         const phone = userPhoneInput.value.trim();
+        const state = userStateSelect.value;
         const ref = paymentRefInput.value.trim();
         const qty = parseInt(quantitySelect.value);
         const total = totalPriceElement.textContent;
         const method = paymentMethodSelect.options[paymentMethodSelect.selectedIndex].text;
         const hasReceipt = paymentReceiptInput.files.length > 0;
 
-        if (!name || !cedula || !phone || !ref) {
-            alert('⚠️ Por favor completa todos tus datos personales y la referencia de pago.');
+        if (!name || !cedula || !phone || !state || !ref) {
+            alert('⚠️ Por favor completa todos tus datos personales, estado de procedencia y la referencia de pago.');
             return;
         }
 
@@ -85,17 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (qty > availableStock) {
-            alert('⚠️ Lo sentimos, no hay suficientes boletos disponibles en este momento para esa cantidad.');
+            alert('⚠️ Lo sentimos, no hay suficientes boletos disponibles en este momento.');
             return;
         }
 
-        // Restar los boletos del stock en vivo
+        // Restar boletos del stock en vivo
         availableStock -= qty;
-        stockCountElement.textContent = availableStock;
+        stockCountElement.textContent = availableStock.toLocaleString();
 
-        alert(`✅ ¡Pago y Registro Confirmados con Éxito!\n\nParticipante: ${name}\nCédula: ${cedula}\nBoletos Adquiridos: ${qty}\nTotal Pagado: ${total}\nMétodo: ${method}\nReferencia: ${ref}\n\n¡Tus números han sido apartados y el stock se ha actualizado!`);
+        alert(`✅ ¡Pago y Registro Confirmados con Éxito!\n\nParticipante: ${name}\nCédula: ${cedula}\nEstado: ${state}\nBoletos Adquiridos: ${qty}\nTotal Pagado: ${total}\nMétodo: ${method}\nReferencia: ${ref}\n\n¡Tus números han sido apartados y el stock se ha actualizado!`);
         
-        // Limpiar campos clave
+        // Limpiar referencia y capture
         paymentRefInput.value = '';
         paymentReceiptInput.value = '';
     });
