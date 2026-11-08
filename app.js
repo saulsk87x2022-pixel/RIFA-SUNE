@@ -9,8 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const userCedulaInput = document.getElementById('userCedula');
     const userPhoneInput = document.getElementById('userPhone');
     const paymentRefInput = document.getElementById('paymentRef');
+    const paymentReceiptInput = document.getElementById('paymentReceipt');
 
-    // Datos detallados según el método de pago seleccionado
+    // Datos oficiales de pago
     const paymentDetails = {
         pagomovil: `
             <h4>📱 Datos para Pago Móvil</h4>
@@ -21,36 +22,34 @@ document.addEventListener('DOMContentLoaded', () => {
         binance: `
             <h4>🟡 Datos para Binance Pay (USDT)</h4>
             <p><strong>Correo / Pay ID:</strong> aliannis2502@gmail.com</p>
-            <p>Envía el monto exacto en USDT y anota tu referencia.</p>
+            <p>Envía el monto exacto en USDT y adjunta tu comprobante.</p>
         `,
         zinli: `
             <h4>💳 Datos para Zinli</h4>
             <p><strong>Correo / Cuenta:</strong> aliannis2502@gmail.com</p>
-            <p>Efectúa tu pago y coloca el número de confirmación.</p>
+            <p>Efectúa tu pago y coloca el número de referencia.</p>
         `,
         paypal: `
             <h4>🅿️ Datos para PayPal</h4>
             <p><strong>Correo:</strong> aliannis2502@gmail.com</p>
-            <p>Asegúrate de cubrir las comisiones de envío si aplica.</p>
+            <p>Asegúrate de cubrir las comisiones si aplica.</p>
         `,
         transferencia: `
             <h4>🏦 Transferencia Bancaria Nacional</h4>
             <p><strong>Banco:</strong> Banco de Venezuela</p>
-            <p><strong>Cuenta:</strong> Consultar por WhatsApp o usar Pago Móvil</p>
+            <p><strong>Cuenta:</strong> Usar datos de Pago Móvil</p>
         `
     };
 
-    // Función para actualizar los datos bancarios en pantalla
     function updatePaymentInfo() {
         const selectedMethod = paymentMethodSelect.value;
         paymentInfoBox.innerHTML = paymentDetails[selectedMethod] || '';
     }
 
-    // Ejecutar al cargar y al cambiar de opción
     paymentMethodSelect.addEventListener('change', updatePaymentInfo);
     updatePaymentInfo();
 
-    // Actualizar precio automáticamente al cambiar la cantidad de boletos
+    // Actualizar precio automáticamente
     quantitySelect.addEventListener('change', (e) => {
         const qty = parseInt(e.target.value);
         const unitPrice = 30; // 10 tickets = 300 Bs.f
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = `${total.toLocaleString()} Bs.f`;
     });
 
-    // Acción al hacer clic en reservar
+    // Acción del botón de confirmar pago
     buyButton.addEventListener('click', () => {
         const name = fullNameInput.value.trim();
         const cedula = userCedulaInput.value.trim();
@@ -67,12 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const qty = quantitySelect.value;
         const total = totalPriceElement.textContent;
         const method = paymentMethodSelect.options[paymentMethodSelect.selectedIndex].text;
+        const hasReceipt = paymentReceiptInput.files.length > 0;
 
         if (!name || !cedula || !phone || !ref) {
-            alert('⚠️ Por favor completa todos tus datos personales y la referencia de pago antes de continuar.');
+            alert('⚠️ Por favor completa todos tus datos personales y la referencia de pago.');
             return;
         }
 
-        alert(`✅ ¡Registro de Reserva Exitoso!\n\nParticipante: ${name}\nCédula: ${cedula}\nTeléfono: ${phone}\nBoletos: ${qty}\nTotal: ${total}\nMétodo: ${method}\nReferencia: ${ref}\n\n¡Tus datos han sido registrados con éxito! Pronto validaremos tu pago.`);
+        if (!hasReceipt) {
+            alert('⚠️ Por favor adjunta el capture o comprobante de tu pago antes de confirmar.');
+            return;
+        }
+
+        alert(`✅ ¡Pago y Registro Confirmados con Éxito!\n\nParticipante: ${name}\nCédula: ${cedula}\nBoletos: ${qty}\nTotal: ${total}\nMétodo: ${method}\nReferencia: ${ref}\nComprobante adjuntado correctamente.\n\n¡Tus números han sido apartados!`);
     });
 });
