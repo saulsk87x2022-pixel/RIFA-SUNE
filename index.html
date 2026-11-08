@@ -30,10 +30,25 @@
             </div>
         </section>
 
-        <!-- Panel de Compra y Selección -->
+        <!-- Panel de Compra y Datos -->
         <section class="purchase-panel">
-            <h2>Selecciona tus Boletos</h2>
-            <p class="instruction">Elige la cantidad de números que deseas adquirir:</p>
+            <h2>Participa en el Sorteo</h2>
+            <p class="instruction">Completa tus datos y selecciona tus boletos:</p>
+
+            <div class="form-group">
+                <label for="fullName">Nombre y Apellido:</label>
+                <input type="text" id="fullName" class="pro-input" placeholder="Ej. Carlos Rodríguez">
+            </div>
+
+            <div class="form-group">
+                <label for="userCedula">Cédula de Identidad:</label>
+                <input type="text" id="userCedula" class="pro-input" placeholder="Ej. V-25412365">
+            </div>
+
+            <div class="form-group">
+                <label for="userPhone">Número de Teléfono / WhatsApp:</label>
+                <input type="tel" id="userPhone" class="pro-input" placeholder="Ej. 0414-1234567">
+            </div>
 
             <div class="form-group">
                 <label for="ticketQuantity">Cantidad de Boletos:</label>
@@ -46,20 +61,30 @@
                 </select>
             </div>
 
-            <div class="total-display">
-                <span>Total a Pagar:</span>
-                <strong id="totalPrice">300 Bs.f</strong>
-            </div>
-
             <div class="form-group">
                 <label for="paymentMethod">Método de Pago:</label>
                 <select id="paymentMethod" class="pro-select">
-                    <option value="pagomovil">Pago Móvil (BNC / Banco de Venezuela)</option>
+                    <option value="pagomovil">Pago Móvil (Banco de Venezuela)</option>
                     <option value="binance">Binance Pay (USDT)</option>
                     <option value="zinli">Zinli</option>
                     <option value="paypal">PayPal</option>
                     <option value="transferencia">Transferencia Bancaria Nacional</option>
                 </select>
+            </div>
+
+            <!-- Recuadro dinámico para los datos bancarios / pago -->
+            <div id="paymentInfoBox" class="payment-info-box">
+                <!-- Se llena automáticamente con JS -->
+            </div>
+
+            <div class="form-group" style="margin-top: 16px;">
+                <label for="paymentRef">Referencia de Pago (Últimos 4 dígitos o Ref):</label>
+                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892">
+            </div>
+
+            <div class="total-display">
+                <span>Total a Pagar:</span>
+                <strong id="totalPrice">300 Bs.f</strong>
             </div>
 
             <button id="buyButton" class="btn-pro">Reservar y Participar</button>
