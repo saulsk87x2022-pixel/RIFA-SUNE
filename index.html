@@ -103,7 +103,6 @@
 
             <div class="form-group">
                 <label for="ticketQuantity">Cantidad de Boletos:</label>
-                <!-- Selector con evento directo integrado -->
                 <select id="ticketQuantity" class="pro-select" onchange="cambiarPrecioTotal(this.value)">
                     <option value="10">10 Boletos - 300 Bs.f (1 Oportunidad)</option>
                     <option value="20">20 Boletos - 600 Bs.f (2 Oportunidades)</option>
@@ -132,39 +131,4 @@
             </div>
 
             <div class="form-group" style="margin-top: 15px;">
-                <label for="sourceBank">Banco Emisor (Desde donde envías):</label>
-                <select id="sourceBank" class="pro-select">
-                    <option value="0102">0102 - Banco de Venezuela</option>
-                    <option value="0104">0104 - Banco Venezolano de Crédito</option>
-                    <option value="0105">0105 - Banco Mercantil</option>
-                    <option value="0108">0108 - BBVA Provincial</option>
-                    <option value="0114">0114 - Bancaribe</option>
-                    <option value="0115">0115 - Banco Exterior</option>
-                    <option value="0128">0128 - Banco Caroní</option>
-                    <option value="0134">0134 - Banesco</option>
-                    <option value="0137">0137 - Banco Sofitasa</option>
-                    <option value="0138">0138 - Banco Plaza</option>
-                    <option value="0151">0151 - Fondo Común (BFC)</option>
-                    <option value="0156">0156 - 100% Banco</option>
-                    <option value="0157">0157 - DelSur Banco Universal</option>
-                    <option value="0163">0163 - Banco del Tesoro</option>
-                    <option value="0166">0166 - Banco Agrícola de Venezuela</option>
-                    <option value="0168">0168 - Bancrecer</option>
-                    <option value="0169">0169 - Banco R4</option>
-                    <option value="0171">0171 - Banco Activo</option>
-                    <option value="0172">0172 - Bancamiga</option>
-                    <option value="0174">0174 - Banplus</option>
-                    <option value="0175">0175 - Banco Bicentenario</option>
-                    <option value="0177">0177 - BANFANB</option>
-                    <option value="0191">0191 - Banco Nacional de Crédito (BNC)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="paymentRef">Referencia de Pago (Últimos 4 dígitos):</label>
-                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
-            </div>
-
-            <div class="form-group">
-                <label for="paymentReceipt">Adjuntar Capture del Comprobante:</label>
-                <input type="file"
+                <label for="
