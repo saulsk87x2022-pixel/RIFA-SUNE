@@ -13,6 +13,8 @@ const convertFileToBase64 = (file) => {
 
 // 1. Cargar stock inicial y configurar el cálculo de precios dinámico
 window.addEventListener('DOMContentLoaded', async () => {
+    console.log("Sistema S&S Inicializado Correctamente");
+
     // Cargar stock disponible
     try {
         const response = await fetch(WEB_APP_URL + "?action=getStock");
@@ -33,18 +35,18 @@ window.addEventListener('DOMContentLoaded', async () => {
     const totalPriceElement = document.getElementById("totalPrice");
 
     if (quantitySelect && totalPriceElement) {
-        const updatePrice = () => {
-            const qty = parseInt(quantitySelect.value);
-            let price = 300; // Por defecto 10 boletos
-            
-            if (qty === 10) price = 300;
-            else if (qty === 20) price = 600;
-            else if (qty === 30) price = 900;
-            else if (qty === 50) price = 1500;
-            else if (qty === 100) price = 3000;
-            else price = (qty / 10) * 300; // Cálculo proporcional por seguridad
+        const pricesMap = {
+            "10": "300 Bs.f",
+            "20": "600 Bs.f",
+            "30": "900 Bs.f",
+            "50": "1,500 Bs.f",
+            "100": "3,000 Bs.f"
+        };
 
-            totalPriceElement.innerText = price.toLocaleString() + " Bs.f";
+        const updatePrice = () => {
+            const selectedVal = quantitySelect.value;
+            totalPriceElement.innerText = pricesMap[selectedVal] || "300 Bs.f";
+            console.log("Cantidad cambiada a:", selectedVal, "Precio:", totalPriceElement.innerText);
         };
 
         quantitySelect.addEventListener("change", updatePrice);
@@ -56,7 +58,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 document.getElementById("buyButton").addEventListener("click", async function(event) {
     event.preventDefault();
 
-    // Recogemos los valores de los inputs
     const fullNameInput = document.getElementById("fullName");
     const cedulaInput = document.getElementById("userCedula");
     const phoneInput = document.getElementById("userPhone");
