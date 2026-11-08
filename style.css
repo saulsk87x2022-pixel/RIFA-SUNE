@@ -1,12 +1,12 @@
 :root {
-    --bg-deep: #070d1a;
-    --bg-card: #111b33;
-    --border-gold: #fbbf24;
-    --gold-gradient: linear-gradient(135deg, #fde047 0%, #fbbf24 50%, #d97706 100%);
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --input-bg: #070d1a;
-    --input-border: #2a3b5e;
+    --bg-light: #f8fafc;
+    --bg-card: #ffffff;
+    --border-gold: #d97706;
+    --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
 }
 
 * {
@@ -17,32 +17,37 @@
 }
 
 body {
-    background-color: var(--bg-deep);
+    background-color: var(--bg-light);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 25px 15px;
+    justify-content: flex-start;
+    padding: 30px 15px;
     position: relative;
     overflow-x: hidden;
 }
 
 .glow-bg {
     position: absolute;
-    top: -60px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 600px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, rgba(59, 130, 246, 0.08) 60%, transparent 100%);
+    width: 500px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(217, 119, 6, 0.12) 0%, rgba(59, 130, 246, 0.08) 70%, transparent 100%);
     z-index: -1;
-    filter: blur(50px);
+    filter: blur(40px);
 }
 
 .hero-header {
     text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
     width: 100%;
     max-width: 500px;
 }
@@ -53,9 +58,12 @@ body {
     margin: 0 auto 15px auto;
     border-radius: 50%;
     border: 3px solid var(--border-gold);
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.35);
+    box-shadow: 0 4px 20px rgba(217, 119, 6, 0.25);
     overflow: hidden;
-    background: #000;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .main-logo {
@@ -65,7 +73,7 @@ body {
 }
 
 .badge-live {
-    background: rgba(251, 191, 36, 0.15);
+    background: rgba(217, 119, 6, 0.12);
     color: var(--border-gold);
     border: 1px solid var(--border-gold);
     padding: 6px 16px;
@@ -81,16 +89,16 @@ body {
     font-size: 2.2rem;
     font-weight: 800;
     letter-spacing: 1.5px;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #0f172a;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .subtitle {
     font-size: 0.95rem;
     color: var(--text-muted);
     font-weight: 600;
+    text-align: center;
 }
 
 .container {
@@ -98,27 +106,38 @@ body {
     max-width: 480px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 20px;
 }
 
 .stock-banner-pro {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: #ffffff;
     border: 2px solid var(--border-gold);
     border-radius: 16px;
-    padding: 15px 20px;
+    padding: 16px 20px;
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(217, 119, 6, 0.15);
+}
+
+.stock-content-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 15px;
-    box-shadow: 0 8px 25px rgba(251, 191, 36, 0.2);
+    text-align: center;
 }
 
 .stock-icon {
-    font-size: 2rem;
+    font-size: 2.2rem;
 }
 
-.stock-info {
+.stock-text {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .stock-title {
@@ -128,7 +147,7 @@ body {
     letter-spacing: 1px;
 }
 
-.stock-info strong {
+.stock-text strong {
     font-size: 1.8rem;
     color: var(--border-gold);
     font-weight: 800;
@@ -137,11 +156,12 @@ body {
 
 .flyer-card {
     background: var(--bg-card);
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
     padding: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
     text-align: center;
+    width: 100%;
 }
 
 .flyer-frame {
@@ -159,12 +179,13 @@ body {
 }
 
 .price-tag {
-    background: rgba(7, 13, 26, 0.8);
-    border: 1px solid var(--border-gold);
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
     border-radius: 10px;
     padding: 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 2px;
 }
 
@@ -183,10 +204,11 @@ body {
 
 .purchase-panel {
     background: var(--bg-card);
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
 }
 
 .purchase-panel h2 {
@@ -205,13 +227,14 @@ body {
 .form-group {
     margin-bottom: 16px;
     text-align: left;
+    width: 100%;
 }
 
 .form-group label {
     display: block;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: var(--text-main);
     margin-bottom: 6px;
 }
 
@@ -230,21 +253,22 @@ body {
 
 .pro-input:focus, .pro-select:focus, .pro-file:focus {
     border-color: var(--border-gold);
-    box-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+    box-shadow: 0 0 8px rgba(217, 119, 6, 0.2);
 }
 
 .payment-info-box {
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px dashed var(--border-gold);
+    background: #fffbeb;
+    border: 1px dashed #d97706;
     border-radius: 10px;
     padding: 16px;
     font-size: 0.9rem;
-    color: var(--text-main);
+    color: #78350f;
     line-height: 1.6;
+    width: 100%;
 }
 
 .payment-info-box h4 {
-    color: var(--border-gold);
+    color: #b45309;
     margin-bottom: 8px;
     font-size: 0.95rem;
     font-weight: 700;
@@ -254,16 +278,16 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.6);
     padding: 8px 12px;
     border-radius: 8px;
     margin: 6px 0;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid #fde68a;
 }
 
 .copy-btn {
     background: var(--gold-gradient);
-    color: #070d1a;
+    color: #ffffff;
     border: none;
     padding: 6px 12px;
     font-size: 0.75rem;
@@ -279,14 +303,15 @@ body {
 }
 
 .total-display {
-    background: rgba(7, 13, 26, 0.6);
-    border: 1px dashed var(--input-border);
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
     border-radius: 10px;
     padding: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 20px 0;
+    width: 100%;
 }
 
 .total-display span {
@@ -303,14 +328,14 @@ body {
 .btn-pro {
     width: 100%;
     background: var(--gold-gradient);
-    color: #070d1a;
+    color: #ffffff;
     border: none;
     padding: 14px;
     border-radius: 10px;
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
     transition: transform 0.2s, opacity 0.2s;
 }
 
@@ -321,11 +346,12 @@ body {
 
 .official-draws {
     background: var(--bg-card);
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    width: 100%;
 }
 
 .official-draws h3 {
@@ -349,13 +375,17 @@ body {
 }
 
 .badge-item {
-    background: rgba(7, 13, 26, 0.8);
-    border: 1px solid #2a3b5e;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
     padding: 10px;
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 footer {
@@ -365,14 +395,19 @@ footer {
     color: var(--text-muted);
     width: 100%;
     max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .social-section {
     margin-bottom: 15px;
     background: var(--bg-card);
-    border: 1px solid rgba(251, 191, 36, 0.2);
+    border: 1px solid #e2e8f0;
     padding: 12px;
     border-radius: 12px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .tiktok-link {
