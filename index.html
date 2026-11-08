@@ -19,6 +19,11 @@
     </header>
 
     <main class="container">
+        <!-- Stock en Vivo de Boletos -->
+        <div class="stock-banner">
+            🎟️ Boletos Disponibles: <strong id="stockCount">840</strong> / 1,000
+        </div>
+
         <!-- Flyer de la Rifa -->
         <section class="flyer-card">
             <div class="flyer-frame">
@@ -66,24 +71,40 @@
                 <select id="paymentMethod" class="pro-select">
                     <option value="pagomovil">Pago Móvil (Banco de Venezuela)</option>
                     <option value="binance">Binance Pay (USDT)</option>
-                    <option value="zinli">Zinli</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="transferencia">Transferencia Bancaria Nacional</option>
+                    <option value="zinli" disabled>Zinli (Bloqueado temporalmente)</option>
+                    <option value="paypal" disabled>PayPal (Bloqueado temporalmente)</option>
                 </select>
             </div>
 
-            <!-- Recuadro dinámico para los datos de pago -->
+            <!-- Recuadro dinámico con botones de copiar -->
             <div id="paymentInfoBox" class="payment-info-box"></div>
 
             <div class="form-group" style="margin-top: 14px;">
                 <label for="sourceBank">Banco Emisor (Desde donde envías):</label>
                 <select id="sourceBank" class="pro-select">
-                    <option value="bcv">Banco de Venezuela (0102)</option>
-                    <option value="bnc">Banco Nacional de Crédito - BNC (0191)</option>
-                    <option value="banesco">Banesco (0134)</option>
-                    <option value="mercantil">Mercantil (0105)</option>
-                    <option value="provincial">BBVA Provincial (0108)</option>
-                    <option value="other">Otro Banco / Billetera Digital</option>
+                    <option value="0102">0102 - Banco de Venezuela</option>
+                    <option value="0104">0104 - Banco Venezolano de Credito</option>
+                    <option value="0105">0105 - Banco Mercantil</option>
+                    <option value="0108">0108 - BBVA Provincial</option>
+                    <option value="0114">0114 - Bancaribe</option>
+                    <option value="0115">0115 - Banco Exterior</option>
+                    <option value="0128">0128 - Banco Caroni</option>
+                    <option value="0134">0134 - Banesco</option>
+                    <option value="0137">0137 - Banco Sofitasa</option>
+                    <option value="0138">0138 - Banco Plaza</option>
+                    <option value="0151">0151 - Fondo Comun (BFC)</option>
+                    <option value="0156">0156 - 100% Banco</option>
+                    <option value="0157">0157 - DelSur Banco Universal</option>
+                    <option value="0163">0163 - Banco del Tesoro</option>
+                    <option value="0166">0166 - Banco Agricola de Venezuela</option>
+                    <option value="0168">0168 - Bancrecer</option>
+                    <option value="0169">0169 - Banco R4</option>
+                    <option value="0171">0171 - Banco Activo</option>
+                    <option value="0172">0172 - Bancamiga</option>
+                    <option value="0174">0174 - Banplus</option>
+                    <option value="0175">0175 - Banco Bicentenario</option>
+                    <option value="0177">0177 - BANFANB</option>
+                    <option value="0191">0191 - Banco Nacional de Credito (BNC)</option>
                 </select>
             </div>
 
