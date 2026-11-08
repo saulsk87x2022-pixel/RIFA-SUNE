@@ -1,6 +1,21 @@
 // ⚠️ PEGA TU URL REAL DE GOOGLE APPS SCRIPT AQUÍ ABAJO (Entre las comillas)
 const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
 
+// Función global y directa para cambiar el precio total al instante
+window.cambiarPrecioTotal = function(val) {
+    const pricesMap = {
+        "10": "300 Bs.f",
+        "20": "600 Bs.f",
+        "30": "900 Bs.f",
+        "50": "1,500 Bs.f",
+        "100": "3,000 Bs.f"
+    };
+    const totalPriceElement = document.getElementById("totalPrice");
+    if (totalPriceElement) {
+        totalPriceElement.innerText = pricesMap[val] || "300 Bs.f";
+    }
+};
+
 // Función auxiliar para convertir la imagen del capture a Base64
 const convertFileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -11,11 +26,8 @@ const convertFileToBase64 = (file) => {
     });
 };
 
-// 1. Cargar stock inicial y configurar el cálculo de precios dinámico
+// 1. Cargar stock inicial al abrir la página web
 window.addEventListener('DOMContentLoaded', async () => {
-    console.log("Sistema S&S Inicializado Correctamente");
-
-    // Cargar stock disponible
     try {
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
@@ -28,29 +40,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (e) {
         console.log("Error cargando stock inicial:", e);
-    }
-
-    // Actualizar el precio total dinámicamente cuando cambie la cantidad de boletos
-    const quantitySelect = document.getElementById("ticketQuantity");
-    const totalPriceElement = document.getElementById("totalPrice");
-
-    if (quantitySelect && totalPriceElement) {
-        const pricesMap = {
-            "10": "300 Bs.f",
-            "20": "600 Bs.f",
-            "30": "900 Bs.f",
-            "50": "1,500 Bs.f",
-            "100": "3,000 Bs.f"
-        };
-
-        const updatePrice = () => {
-            const selectedVal = quantitySelect.value;
-            totalPriceElement.innerText = pricesMap[selectedVal] || "300 Bs.f";
-            console.log("Cantidad cambiada a:", selectedVal, "Precio:", totalPriceElement.innerText);
-        };
-
-        quantitySelect.addEventListener("change", updatePrice);
-        updatePrice(); // Ejecutar al cargar la página
     }
 });
 
