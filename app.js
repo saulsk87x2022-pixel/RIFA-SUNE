@@ -1,51 +1,59 @@
 // 1. Cargar el stock disponible al abrir la página web
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        // REEMPLAZA AQUÍ CON TU URL DE GOOGLE APPS SCRIPT
-        const WEB_APP_URL = "AQUI_TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT"; 
+        // 👇 REEMPLAZA ESTA URL CON TU ENLACE REAL DE GOOGLE APPS SCRIPT 👇
+        const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec"; 
 
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
         
         if (data.availableStock !== undefined) {
-            // Busca el elemento del stock en tu HTML y lo actualiza en vivo
-            const stockElement = document.getElementById("availableStock"); // Asegúrate de que tu contador arriba tenga id="availableStock"
+            const stockElement = document.getElementById("stockCount");
             if (stockElement) {
-                stockElement.innerText = data.availableStock;
+                stockElement.innerText = data.availableStock; // Actualiza el contador de arriba en vivo
             }
         }
     } catch (e) {
-        console.log("Stock inicial cargando por defecto.");
+        console.log("Cargando stock inicial por defecto.");
     }
 });
 
-// 2. Evento del botón de compra
+// 2. Evento del botón de compra y envío de datos
 document.getElementById("buyButton").addEventListener("click", async function(event) {
-    event.preventDefault(); // Evita comportamientos extraños del formulario
+    event.preventDefault(); // Evita recargas extrañas del formulario
 
-    // Recogemos los valores de tus inputs (Asegúrate de que estos IDs existan en tu index.html)
+    // Recogemos los valores de los inputs del HTML
     const fullNameInput = document.getElementById("fullName");
-    const cedulaInput = document.getElementById("cedula");
-    const cantidadInput = document.getElementById("cantidad");
+    const cedulaInput = document.getElementById("userCedula");
+    const phoneInput = document.getElementById("userPhone");
+    const stateInput = document.getElementById("userState");
+    const quantityInput = document.getElementById("ticketQuantity");
+    const sourceBankInput = document.getElementById("sourceBank");
+    const refInput = document.getElementById("paymentRef");
 
-    const formData = {
-        fullName: fullNameInput ? fullNameInput.value : "",
-        userCedula: cedulaInput ? cedulaInput.value : "",
-        ticketQuantity: cantidadInput ? cantidadInput.value : "1"
-    };
-
-    // Validamos que no estén vacíos
-    if (!formData.fullName || !formData.userCedula || !formData.ticketQuantity) {
-        alert("Por favor completa los campos requeridos.");
+    // Validamos que los campos obligatorios no estén vacíos
+    if (!fullNameInput.value || !cedulaInput.value || !refInput.value) {
+        alert("Por favor completa tu Nombre, Cédula y la Referencia de Pago.");
         return;
     }
+
+    const formData = {
+        fullName: fullNameInput.value,
+        userCedula: cedulaInput.value,
+        userPhone: phoneInput ? phoneInput.value : "",
+        userState: stateInput ? stateInput.value : "",
+        ticketQuantity: quantityInput ? quantityInput.value : "10",
+        sourceBank: sourceBankInput ? sourceBankInput.value : "",
+        paymentRef: refInput.value
+    };
 
     const btn = document.getElementById("buyButton");
     btn.innerText = "Procesando pago y asignando números...";
     btn.disabled = true;
 
     try {
-        const WEB_APP_URL = "AQUI_TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT"; // REEMPLAZA AQUÍ TAMBIÉN
+        // 👇 REEMPLAZA ESTA URL CON TU ENLACE REAL DE GOOGLE APPS SCRIPT NUEVAMENTE 👇
+        const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
 
         const response = await fetch(WEB_APP_URL, {
             method: "POST",
@@ -84,8 +92,8 @@ function showSuccessPopup(formData, result) {
     document.getElementById('successModal').style.display = 'flex';
 }
 
-// 4. Botón de cerrar el modal y refrescar
+// 4. Botón de cerrar el modal y refrescar la página
 function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
-    location.reload(); // Recarga para actualizar el stock restado en pantalla
+    location.reload(); // Recarga para actualizar el stock restado arriba
 }
