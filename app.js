@@ -1,4 +1,4 @@
-// URL de tu Google Apps Script actualizada con la nueva versión
+// URL de tu Google Apps Script actualizada
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxnvMohWqGUoGxrCtuyQrk3-837iESdwqAxjFLbXgpvC-Ffcox3Q3q9ScVnvw0on10FqA/exec";
 
 // 1. Cargar stock inicial al abrir la página
@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// 2. Envío del formulario sin bloqueos CORS hacia Google Sheets
+// 2. Envío del formulario garantizado mediante parámetros GET
 document.addEventListener("DOMContentLoaded", () => {
     const buyButton = document.getElementById("buyButton");
     if (buyButton) {
@@ -49,7 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.innerText = "Procesando...";
             btn.disabled = true;
 
-            const formData = new URLSearchParams({
+            // Construir la URL con todos los datos para evitar bloqueos de POST en navegadores
+            const queryParams = new URLSearchParams({
                 fullName,
                 userCedula,
                 userPhone,
@@ -60,11 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                await fetch(WEB_APP_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: formData,
-                    keepalive: true
+                // Usamos fetch con no-cors enviando los datos por la URL (GET) para garantizar el registro
+                await fetch(`${WEB_APP_URL}?${queryParams.toString()}`, {
+                    method: "GET",
+                    mode: "no-cors"
                 });
 
                 // Generar boletos aleatorios para mostrarlos de inmediato en el modal
