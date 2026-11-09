@@ -1,5 +1,5 @@
-// URL de tu Google Apps Script actualizada
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxnvMohWqGUoGxrCtuyQrk3-837iESdwqAxjFLbXgpvC-Ffcox3Q3q9ScVnvw0on10FqA/exec";
+// URL de tu Google Apps Script actualizada con la nueva versión
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx0nxL_P7_yJWTSJFO-wv5CqPkrUeDbYsWTOKwjqZZfFoCtcYSODy_dQkNNRxGLzNf3Hg/exec";
 
 // 1. Cargar stock inicial al abrir la página
 window.addEventListener('DOMContentLoaded', async () => {
@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.innerText = "Procesando...";
             btn.disabled = true;
 
-            // Construir la URL con todos los datos para evitar bloqueos de POST en navegadores
             const queryParams = new URLSearchParams({
                 fullName,
                 userCedula,
@@ -61,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                // Usamos fetch con no-cors enviando los datos por la URL (GET) para garantizar el registro
+                // Envío mediante GET para evitar bloqueos de red y CORS del navegador
                 await fetch(`${WEB_APP_URL}?${queryParams.toString()}`, {
                     method: "GET",
                     mode: "no-cors"
