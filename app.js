@@ -1,5 +1,5 @@
-// URL de tu Google Apps Script integrada correctamente
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzINDL95vcOFsG9mpn4Gb5hbztly7DJxLK-5mTdQ6Lx0lJbzS6fBSRvz_8z_x9DbFVFoA/exec";
+// URL de tu Google Apps Script integrada correctamente (con permisos de Google Drive actualizados)
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby7P6lIDi2ReUYBLf0ivSU46zcPf0AvEafamv1Qp739Llqb9O7XMegeuXczTHRUy7Tziw/exec";
 
 // Función auxiliar para convertir la imagen del capture a Base64
 const convertFileToBase64 = (file) => {
