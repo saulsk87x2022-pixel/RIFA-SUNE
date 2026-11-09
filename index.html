@@ -84,6 +84,30 @@
             background: #20ba5a;
         }
 
+        /* Estilos para la Barra de Progreso y Escasez Visual */
+        .progress-container {
+            width: 100%;
+            background: #f1f5f9;
+            border-radius: 8px;
+            height: 8px;
+            margin-top: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #10b981);
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+        .progress-text {
+            font-size: 11px;
+            color: #64748b;
+            text-align: right;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
         /* Estilos limpios para el desglose detallado del premio */
         .prize-details-card {
             background: #ffffff;
@@ -251,13 +275,17 @@
     </header>
 
     <main class="container">
-        <!-- Stock en Vivo Centrado -->
+        <!-- Stock en Vivo con Barra de Progreso y Escasez Visual -->
         <div class="stock-banner-pro">
             <div class="stock-content-centered">
                 <span class="stock-icon">🎟️</span>
-                <div class="stock-text">
+                <div class="stock-text" style="width: 100%;">
                     <span class="stock-title">BOLETOS DISPONIBLES</span>
                     <strong id="stockCount">9,999</strong>
+                    <div class="progress-container">
+                        <div id="stockProgressBar" class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <div id="progressText" class="progress-text">Cargando disponibilidad...</div>
                 </div>
             </div>
         </div>
@@ -523,7 +551,7 @@
             "100": 3000 
         };
 
-        // Función para copiar datos al portapapeles con aviso visual (Cambia a color verde y texto "¡Copiado!")
+        // Función para copiar datos al portapapeles con aviso visual
         function copyToClipboard(text, buttonElement) {
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = buttonElement.innerText;
@@ -550,15 +578,53 @@
         window.addEventListener('DOMContentLoaded', async () => {
             actualizarPrecio();
 
+            // Carga de Stock y cálculo dinámico de barra de progreso y escasez
             try {
                 const response = await fetch(WEB_APP_URL + "?action=getStock");
                 const data = await response.json();
                 const stockElement = document.getElementById("stockCount");
+                const progressBar = document.getElementById("stockProgressBar");
+                const progressText = document.getElementById("progressText");
+
+                const available = data.stock !== undefined ? data.stock : 9999;
                 if (stockElement) {
-                    stockElement.innerText = data.stock !== undefined ? data.stock : 9999;
+                    stockElement.innerText = available.toLocaleString();
+                }
+
+                const totalCapacity = 9999;
+                const sold = totalCapacity - available;
+                const percentageSold = Math.min(100, Math.max(0, (sold / totalCapacity) * 100)).toFixed(1);
+
+                if (progressBar) {
+                    progressBar.style.width = percentageSold + "%";
+                }
+                if (progressText) {
+                    progressText.innerText = sold > 0 ? `${sold} vendidos (${percentageSold}% completado)` : "¡Disponible para apartar tus números!";
                 }
             } catch (e) {
                 console.log("No se pudo cargar el stock en tiempo real.");
+            }
+
+            // Formateo inteligente en tiempo real para Teléfono y Cédula
+            const phoneInput = document.getElementById("userPhone");
+            if (phoneInput) {
+                phoneInput.addEventListener("input", function(e) {
+                    let val = e.target.value.replace(/\D/g, "");
+                    if (val.length > 4) {
+                        val = val.slice(0, 4) + "-" + val.slice(4, 11);
+                    }
+                    e.target.value = val;
+                });
+            }
+
+            const cedulaInput = document.getElementById("userCedula");
+            if (cedulaInput) {
+                cedulaInput.addEventListener("blur", function(e) {
+                    let val = e.target.value.trim().toUpperCase();
+                    if (val && !/^[VEJGP]-/.test(val)) {
+                        e.target.value = "V-" + val.replace(/[^0-9]/g, "");
+                    }
+                });
             }
         });
 
