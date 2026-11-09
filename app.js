@@ -75,6 +75,16 @@ document.getElementById("buyButton").addEventListener("click", async function(ev
         return;
     }
 
+    // Validación de peso máximo de la imagen (5 MB)
+    if (receiptInput && receiptInput.files && receiptInput.files[0]) {
+        const file = receiptInput.files[0];
+        const maxSize = 5 * 1024 * 1024; // 5 MB en bytes
+        if (file.size > maxSize) {
+            alert("El comprobante es demasiado pesado (máximo 5 MB). Por favor selecciona una imagen más ligera o comprimida.");
+            return;
+        }
+    }
+
     const btn = document.getElementById("buyButton");
     const originalText = btn.innerText;
     btn.innerText = "Procesando pago y asignando números...";
