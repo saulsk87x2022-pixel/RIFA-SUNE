@@ -27,10 +27,15 @@ window.addEventListener('DOMContentLoaded', async () => {
             "100": "3,000 Bs.f" 
         };
         
-        quantitySelect.addEventListener("change", () => {
-            totalPriceElement.innerText = prices[quantitySelect.value] || "300 Bs.f";
-        });
-        totalPriceElement.innerText = prices[quantitySelect.value] || "300 Bs.f";
+        // Función para actualizar el precio dinámicamente
+        const updatePrice = () => {
+            const selectedVal = quantitySelect.value;
+            totalPriceElement.innerText = prices[selectedVal] || "300 Bs.f";
+        };
+
+        // Escuchar cambios y actualizar de inmediato al cargar la página
+        quantitySelect.addEventListener("change", updatePrice);
+        updatePrice();
     }
 });
 
@@ -50,8 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const ticketQuantity = document.getElementById("ticketQuantity").value;
             const sourceBank = document.getElementById("sourceBank").value;
             const paymentRef = document.getElementById("paymentRef").value.trim();
+            const paymentReceipt = document.getElementById("paymentReceipt");
 
-            // Validaciones básicas de seguridad
+            // Validaciones de seguridad
             if (!fullName) {
                 alert("Por favor ingresa tu Nombre y Apellido.");
                 document.getElementById("fullName").focus();
@@ -77,13 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("paymentRef").focus();
                 return;
             }
+            if (!paymentReceipt.files || paymentReceipt.files.length === 0) {
+                alert("Por favor adjunta el capture del comprobante de pago.");
+                paymentReceipt.focus();
+                return;
+            }
 
             const btn = buyButton;
             const originalText = btn.innerText;
             btn.innerText = "Procesando...";
             btn.disabled = true;
 
-            // Construir los parámetros exactos requeridos por Google Apps Script
+            // Construir los parámetros requeridos por Google Apps Script
             const queryParams = new URLSearchParams({
                 fullName: fullName,
                 userCedula: userCedula,
@@ -95,13 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                // Envío mediante GET con no-cors para evitar bloqueos de seguridad del navegador
+                // Envío mediante GET con no-cors
                 await fetch(`${WEB_APP_URL}?${queryParams.toString()}`, {
                     method: "GET",
                     mode: "no-cors"
                 });
 
-                // Generar los boletos aleatorios únicos para la previsualización del modal
+                // Generar boletos aleatorios únicos para la previsualización
                 const mockNumbers = generateRandomTickets(parseInt(ticketQuantity));
                 
                 setTimeout(() => {
