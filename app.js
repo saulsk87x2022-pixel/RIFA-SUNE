@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// 2. Evento del botón de compra mediante envío seguro sin bloqueos CORS
+// 2. Evento del botón de compra optimizado para registro seguro en Google Sheet
 document.addEventListener("DOMContentLoaded", () => {
     const buyButton = document.getElementById("buyButton");
     if (buyButton) {
@@ -83,18 +83,20 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             try {
-                // Realizamos el envío mediante fetch con keepalive para asegurar el registro en el servidor
+                // Convertimos los datos a formato URL encoded para asegurar lectura total en Google Apps Script
+                const encodedData = new URLSearchParams(formData).toString();
+
                 await fetch(WEB_APP_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/x-www-form-urlencoded"
                     },
-                    body: JSON.stringify(formData),
+                    body: encodedData,
                     keepalive: true
                 });
 
-                // Generamos una previsualización inmediata de boletos aleatorios de 4 dígitos para el cliente
+                // Generamos los números de boletos aleatorios de 4 dígitos para mostrarlos en pantalla
                 const mockNumbers = generateRandomTickets(parseInt(formData.ticketQuantity));
                 
                 setTimeout(() => {
@@ -111,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Función auxiliar para generar boletos locales de 4 dígitos en caso de bloqueo estricto de red
 function generateRandomTickets(qty) {
     let nums = [];
     while(nums.length < qty) {
