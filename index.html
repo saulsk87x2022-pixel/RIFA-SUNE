@@ -122,10 +122,10 @@
                 </select>
             </div>
 
-            <!-- Recuadro informativo de Pago Móvil con tus datos reales -->
+            <!-- Recuadro informativo de Pago Móvil con Banco de Venezuela -->
             <div id="paymentInfoBox" class="payment-info-box" style="background: #fffbeb; border: 1px solid #f59e0b; padding: 14px; border-radius: 8px; margin: 15px 0; font-size: 13px; color: #92400e; line-height: 1.6; width: 100%; box-sizing: border-box;">
                 <strong style="display: block; margin-bottom: 6px;">📲 Datos para realizar tu Pago Móvil:</strong>
-                • <strong>Banco:</strong> Banco Nacional de Crédito (0191)<br>
+                • <strong>Banco:</strong> Banco de Venezuela (0102)<br>
                 • <strong>Teléfono:</strong> 0424-1593168<br>
                 • <strong>Cédula:</strong> V-25887840
             </div>
@@ -161,4 +161,35 @@
 
             <div class="form-group">
                 <label for="paymentRef">Referencia de Pago (Últimos 4 dígitos):</label>
-                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0
+                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+            </div>
+
+            <!-- Campo de Capture obligatorio -->
+            <div class="form-group">
+                <label for="paymentReceipt">Adjuntar Capture del Comprobante:</label>
+                <input type="file" id="paymentReceipt" class="pro-file" accept="image/*">
+            </div>
+
+            <div class="total-display">
+                <span>Total a Pagar:</span>
+                <strong id="totalPrice">300 Bs.f</strong>
+            </div>
+
+            <button id="buyButton" class="btn-pro">Confirmar y Enviar Pago</button>
+        </section>
+
+        <!-- Sorteos Oficiales Avalados -->
+        <section class="official-draws">
+            <h3>SORTEOS OFICIALES AVALADOS</h3>
+            <p>Nuestros sorteos se basan en la lotería oficial del Estado Táchira</p>
+            <div class="draws-badges">
+                <div class="badge-item">🏛️ Lotería del Táchira</div>
+                <div class="badge-item">⭐ Super Gana</div>
+                <div class="badge-item">🎯 Conalot</div>
+                <div class="badge-item">🌐 SUR Rifas</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SSINTERNACIONAL C.A. Todos
