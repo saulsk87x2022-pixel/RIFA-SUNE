@@ -1,5 +1,5 @@
-// ⚠️ PEGA TU URL REAL DE GOOGLE APPS SCRIPT AQUÍ ABAJO (Entre las comillas)
-const WEB_APP_URL = "https://script.google.com/macros/s/TU_URL_REAL_DE_GOOGLE_APPS_SCRIPT/exec";
+// URL de tu Google Apps Script integrada correctamente
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzINDL95vcOFsG9mpn4Gb5hbztly7DJxLK-5mTdQ6Lx0lJbzS6fBSRvz_8z_x9DbFVFoA/exec";
 
 // Función auxiliar para convertir la imagen del capture a Base64
 const convertFileToBase64 = (file) => {
