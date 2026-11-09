@@ -103,7 +103,7 @@
 
             <div class="form-group">
                 <label for="ticketQuantity">Cantidad de Boletos:</label>
-                <select id="ticketQuantity" class="pro-select" onchange="cambiarPrecio(this.value)">
+                <select id="ticketQuantity" class="pro-select">
                     <option value="10">10 Boletos - 300 Bs.f (1 Oportunidad)</option>
                     <option value="20">20 Boletos - 600 Bs.f (2 Oportunidades)</option>
                     <option value="30">30 Boletos - 900 Bs.f (3 Oportunidades)</option>
@@ -210,4 +210,188 @@
                 
                 <div style="font-size: 14px; color: #334155; line-height: 1.6;">
                     <p style="margin: 6px 0;"><strong>Participante:</strong> <span id="modalName"></span></p>
-                    <p style="margin: 6px 0;"><strong>Cédula:</strong> <span id="modal
+                    <p style="margin: 6px 0;"><strong>Cédula:</strong> <span id="modalCedula"></span></p>
+                    <p style="margin: 6px 0;"><strong>Cantidad de Boletos:</strong> <span id="modalQty"></span></p>
+                    <p style="margin: 6px 0;"><strong>Estatus:</strong> <span style="color: #d97706; font-weight: bold;">Pendiente de Verificación</span></p>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <label style="font-size: 13px; font-weight: bold; color: #475569; display: block; margin-bottom: 5px;">Tus Números Asignados (Previsualización):</label>
+                    <div id="modalNumbers" style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #1e293b; max-height: 120px; overflow-y: auto; text-align: center; word-break: break-all;">
+                        Cargando números...
+                    </div>
+                </div>
+
+                <p style="font-size: 12px; color: #64748b; margin-top: 15px; text-align: center;">
+                    * Tu compra pasará a revisión. Una vez verificado el pago, tu estatus cambiará a Aprobado.
+                </p>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 15px 20px; text-align: center;">
+                <button onclick="closeSuccessModal()" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer;">
+                    Entendido / Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT JS ROBUSTO INTEGRADO -->
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx0nxL_P7_yJWTSJFO-wv5CqPkrUeDbYsWTOKwjqZZfFoCtcYSODy_dQkNNRxGLzNf3Hg/exec";
+
+        const prices = { 
+            "10": "300 Bs.f", 
+            "20": "600 Bs.f", 
+            "30": "900 Bs.f", 
+            "50": "1,500 Bs.f", 
+            "100": "3,000 Bs.f" 
+        };
+
+        function actualizarPrecio() {
+            const select = document.getElementById("ticketQuantity");
+            const totalPriceElement = document.getElementById("totalPrice");
+            if (select && totalPriceElement) {
+                const val = select.value;
+                totalPriceElement.innerText = prices[val] || "300 Bs.f";
+            }
+        }
+
+        // Cargar stock y forzar la lectura del precio inicial
+        window.addEventListener('DOMContentLoaded', async () => {
+            actualizarPrecio();
+
+            try {
+                const response = await fetch(WEB_APP_URL + "?action=getStock");
+                const data = await response.json();
+                const stockElement = document.getElementById("stockCount");
+                if (stockElement) {
+                    stockElement.innerText = data.stock !== undefined ? data.stock : 9999;
+                }
+            } catch (e) {
+                console.log("No se pudo cargar el stock en tiempo real.");
+            }
+        });
+
+        // Escuchar cambios de forma múltiple (change e input) para evitar bloqueos
+        document.addEventListener("DOMContentLoaded", () => {
+            const select = document.getElementById("ticketQuantity");
+            if (select) {
+                select.addEventListener("change", actualizarPrecio);
+                select.addEventListener("input", actualizarPrecio);
+            }
+
+            const buyButton = document.getElementById("buyButton");
+            if (buyButton) {
+                buyButton.addEventListener("click", async function(event) {
+                    event.preventDefault();
+
+                    const fullName = document.getElementById("fullName").value.trim();
+                    const userCedula = document.getElementById("userCedula").value.trim();
+                    const userPhone = document.getElementById("userPhone").value.trim();
+                    const userState = document.getElementById("userState").value;
+                    const ticketQuantity = document.getElementById("ticketQuantity").value;
+                    const sourceBank = document.getElementById("sourceBank").value;
+                    const paymentRef = document.getElementById("paymentRef").value.trim();
+                    const paymentReceipt = document.getElementById("paymentReceipt");
+
+                    if (!fullName) {
+                        alert("Por favor ingresa tu Nombre y Apellido.");
+                        document.getElementById("fullName").focus();
+                        return;
+                    }
+                    if (!userCedula) {
+                        alert("Por favor ingresa tu Cédula de Identidad.");
+                        document.getElementById("userCedula").focus();
+                        return;
+                    }
+                    if (!userPhone) {
+                        alert("Por favor ingresa tu Teléfono o WhatsApp.");
+                        document.getElementById("userPhone").focus();
+                        return;
+                    }
+                    if (!userState) {
+                        alert("Por favor selecciona tu Estado de procedencia.");
+                        document.getElementById("userState").focus();
+                        return;
+                    }
+                    if (!paymentRef || paymentRef.length !== 4) {
+                        alert("La referencia de pago debe tener exactamente los últimos 4 dígitos.");
+                        document.getElementById("paymentRef").focus();
+                        return;
+                    }
+                    if (!paymentReceipt.files || paymentReceipt.files.length === 0) {
+                        alert("Por favor adjunta el capture del comprobante de pago.");
+                        paymentReceipt.focus();
+                        return;
+                    }
+
+                    const btn = buyButton;
+                    const originalText = btn.innerText;
+                    btn.innerText = "Procesando...";
+                    btn.disabled = true;
+
+                    const queryParams = new URLSearchParams({
+                        fullName: fullName,
+                        userCedula: userCedula,
+                        userPhone: userPhone,
+                        userState: userState,
+                        ticketQuantity: ticketQuantity,
+                        sourceBank: sourceBank,
+                        paymentRef: paymentRef
+                    });
+
+                    try {
+                        await fetch(`${WEB_APP_URL}?${queryParams.toString()}`, {
+                            method: "GET",
+                            mode: "no-cors"
+                        });
+
+                        const mockNumbers = generateRandomTickets(parseInt(ticketQuantity));
+                        
+                        setTimeout(() => {
+                            showSuccessPopup({ fullName, userCedula, ticketQuantity }, mockNumbers);
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        }, 1000);
+
+                    } catch (error) {
+                        console.error("Error al enviar los datos:", error);
+                        alert("Hubo un error al procesar la solicitud con el servidor.");
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            }
+        });
+
+        function generateRandomTickets(qty) {
+            let nums = [];
+            while(nums.length < qty) {
+                let rand = ("0000" + Math.floor(Math.random() * 10000)).slice(-4);
+                if(!nums.includes(rand)) nums.push(rand);
+            }
+            return nums.join(", ");
+        }
+
+        function showSuccessPopup(formData, assignedNumbers) {
+            const modalName = document.getElementById('modalName');
+            const modalCedula = document.getElementById('modalCedula');
+            const modalQty = document.getElementById('modalQty');
+            const modalNumbers = document.getElementById('modalNumbers');
+            const successModal = document.getElementById('successModal');
+
+            if (modalName) modalName.innerText = formData.fullName;
+            if (modalCedula) modalCedula.innerText = formData.userCedula;
+            if (modalQty) modalQty.innerText = formData.ticketQuantity;
+            if (modalNumbers) modalNumbers.innerText = assignedNumbers;
+            if (successModal) successModal.style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            const successModal = document.getElementById('successModal');
+            if (successModal) successModal.style.display = 'none';
+            location.reload();
+        }
+    </script>
+</body>
+</html>
