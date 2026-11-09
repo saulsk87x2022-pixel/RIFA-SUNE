@@ -1,124 +1,149 @@
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(15000);
-  
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    
-    // Obtener o crear la pestaña "Ventas"
-    var sheet = ss.getSheetByName("Ventas");
-    if (!sheet) {
-      sheet = ss.insertSheet("Ventas");
-      sheet.appendRow([
-        "Fecha/Hora", "Nombre y Apellido", "Cédula", "Teléfono", "Estado", 
-        "Boletos", "Método de Pago", "Banco Emisor", "Referencia", 
-        "Números Asignados", "Estatus", "Comprobante"
-      ]);
-    }
-    
-    // Obtener o crear la pestaña "Stock"
-    var stockSheet = ss.getSheetByName("Stock");
-    if (!stockSheet) {
-      stockSheet = ss.insertSheet("Stock");
-      stockSheet.getRange("B13").setValue(9949);
-    }
-    
-    var data = JSON.parse(e.postData.contents);
-    
-    var fullName = data.fullName;
-    var userCedula = data.userCedula;
-    var userPhone = data.userPhone;
-    var userState = data.userState;
-    var qty = parseInt(data.ticketQuantity);
-    var sourceBank = data.sourceBank;
-    var paymentRef = data.paymentRef;
-    var receiptName = data.receiptName;
-    
-    // Registro limpio del comprobante basado en el nombre y referencia
-    var fileUrl = receiptName ? "Comprobante: " + receiptName + " (Ref: " + paymentRef + ")" : "Comprobante Recibido (Ref: " + paymentRef + ")";
-    
-    // Lógica para asignar números de boletos únicos
-    var totalBoletos = 9999;
-    var lastRow = sheet.getLastRow();
-    var soldNumbersSet = {};
-    
-    if (lastRow > 1) {
-      var existingData = sheet.getRange(2, 10, lastRow - 1, 1).getValues();
-      for (var i = 0; i < existingData.length; i++) {
-        var rowNums = String(existingData[i][0]).split(",");
-        for (var j = 0; j < rowNums.length; j++) {
-          var numTrim = rowNums[j].trim();
-          if (numTrim) soldNumbersSet[numTrim] = true;
+// URL de tu Google Apps Script actualizada
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx2-x-lwkXrAfic_MPDO1W7D3ZThKX8tS5-gJtRs2E2fSVdLE8QksT30ojGb34QbIIg/exec";
+
+// Función auxiliar para convertir la imagen del capture a Base64
+const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
+};
+
+// 1. Cargar stock inicial y activar el selector de precios dinámico
+window.addEventListener('DOMContentLoaded', async () => {
+    // Cargar stock disponible
+    try {
+        const response = await fetch(WEB_APP_URL + "?action=getStock");
+        const data = await response.json();
+        
+        const stockValue = data.stock !== undefined ? data.stock : (data.availableStock !== undefined ? data.availableStock : null);
+        
+        if (stockValue !== null) {
+            const stockElement = document.getElementById("stockCount");
+            if (stockElement) {
+                stockElement.innerText = stockValue;
+            }
         }
-      }
+    } catch (e) {
+        console.log("Error cargando stock inicial:", e);
     }
-    
-    var assignedNumbers = [];
-    var attempts = 0;
-    while (assignedNumbers.length < qty && attempts < 50000) {
-      var randomNum = Math.floor(Math.random() * totalBoletos);
-      var formattedNum = ("0000" + randomNum).slice(-4);
-      if (!soldNumbersSet[formattedNum]) {
-        soldNumbersSet[formattedNum] = true;
-        assignedNumbers.push(formattedNum);
-      }
-      attempts++;
+
+    // Configurar el cambio de precio dinámico basado en los boletos seleccionados
+    const quantitySelect = document.getElementById("ticketQuantity");
+    const totalPriceElement = document.getElementById("totalPrice");
+
+    if (quantitySelect && totalPriceElement) {
+        const pricesMap = {
+            "10": "300 Bs.f",
+            "20": "600 Bs.f",
+            "30": "900 Bs.f",
+            "50": "1,500 Bs.f",
+            "100": "3,000 Bs.f"
+        };
+
+        const updatePrice = () => {
+            const val = quantitySelect.value;
+            totalPriceElement.innerText = pricesMap[val] || "300 Bs.f";
+        };
+
+        quantitySelect.addEventListener("change", updatePrice);
+        updatePrice();
     }
-    
-    var assignedStr = assignedNumbers.join(", ");
-    var fechaHora = Utilities.formatDate(new Date(), "America/Caracas", "dd/MM/yyyy HH:mm:ss");
-    
-    // Registrar la compra en la pestaña "Ventas"
-    sheet.appendRow([
-      fechaHora,
-      fullName,
-      userCedula,
-      userPhone,
-      userState,
-      qty,
-      "Pago Móvil",
-      sourceBank,
-      paymentRef,
-      assignedStr,
-      "Pendiente de Verificación",
-      fileUrl
-    ]);
+});
 
-    var resultado = {
-      status: "success",
-      assignedNumbers: assignedStr
-    };
+// 2. Evento del botón de compra y envío de datos
+document.addEventListener("DOMContentLoaded", () => {
+    const buyButton = document.getElementById("buyButton");
+    if (buyButton) {
+        buyButton.addEventListener("click", async function(event) {
+            event.preventDefault();
 
-    return ContentService.createTextOutput(JSON.stringify(resultado))
-                         .setMimeType(ContentService.MimeType.JSON);
+            const fullNameInput = document.getElementById("fullName");
+            const cedulaInput = document.getElementById("userCedula");
+            const phoneInput = document.getElementById("userPhone");
+            const stateInput = document.getElementById("userState");
+            const quantityInput = document.getElementById("ticketQuantity");
+            const sourceBankInput = document.getElementById("sourceBank");
+            const refInput = document.getElementById("paymentRef");
+            const receiptInput = document.getElementById("paymentReceipt");
 
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+            // Validaciones obligatorias (Nombre, Cédula y Referencia de exactamente 4 dígitos)
+            if (!fullNameInput || !fullNameInput.value.trim() || 
+                !cedulaInput || !cedulaInput.value.trim() || 
+                !refInput || refInput.value.trim().length !== 4) {
+                alert("Por favor completa tu Nombre, Cédula y asegúrate de que la Referencia de Pago tenga exactamente 4 dígitos.");
+                return;
+            }
+
+            const btn = document.getElementById("buyButton");
+            const originalText = btn.innerText;
+            btn.innerText = "Procesando pago y asignando números...";
+            btn.disabled = true;
+
+            try {
+                let imageName = "";
+
+                if (receiptInput && receiptInput.files && receiptInput.files[0]) {
+                    imageName = receiptInput.files[0].name;
+                }
+
+                const formData = {
+                    fullName: fullNameInput.value.trim(),
+                    userCedula: cedulaInput.value.trim(),
+                    userPhone: phoneInput ? phoneInput.value.trim() : "",
+                    userState: stateInput ? stateInput.value : "",
+                    ticketQuantity: quantityInput ? quantityInput.value : "10",
+                    sourceBank: sourceBankInput ? sourceBankInput.value : "",
+                    paymentRef: refInput.value.trim(),
+                    receiptName: imageName
+                };
+
+                const response = await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    showSuccessPopup(formData, result);
+                } else {
+                    alert("Error del servidor: " + (result.message || "No se pudo procesar la solicitud"));
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+
+            } catch (error) {
+                console.error("Error en la petición:", error);
+                alert("Ocurrió un error de conexión con el servidor. Verifica tu conexión.");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    }
+});
+
+// 3. Función para mostrar el modal corporativo
+function showSuccessPopup(formData, result) {
+    const modalName = document.getElementById('modalName');
+    const modalCedula = document.getElementById('modalCedula');
+    const modalQty = document.getElementById('modalQty');
+    const modalNumbers = document.getElementById('modalNumbers');
+    const successModal = document.getElementById('successModal');
+
+    if (modalName) modalName.innerText = formData.fullName;
+    if (modalCedula) modalCedula.innerText = formData.userCedula;
+    if (modalQty) modalQty.innerText = formData.ticketQuantity;
+    if (modalNumbers) modalNumbers.innerText = result.assignedNumbers || "Números asignados correctamente.";
     
-  } finally {
-    lock.releaseLock();
-  }
+    if (successModal) successModal.style.display = 'flex';
 }
 
-function doGet(e) {
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var stockSheet = ss.getSheetByName("Stock");
-    if (!stockSheet) {
-      stockSheet = ss.insertSheet("Stock");
-      stockSheet.getRange("B13").setValue(9949);
-    }
-    
-    var rawStock = stockSheet.getRange("B13").getValue();
-    var stockVal = parseInt(rawStock) || 9949;
-
-    return ContentService.createTextOutput(JSON.stringify({ stock: stockVal }))
-                         .setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({ stock: 9949 }))
-                         .setMimeType(ContentService.MimeType.JSON);
-  }
+// 4. Botón de cerrar el modal y refrescar
+function closeSuccessModal() {
+    const successModal = document.getElementById('successModal');
+    if (successModal) successModal.style.display = 'none';
+    location.reload();
 }
