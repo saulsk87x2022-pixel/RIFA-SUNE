@@ -67,7 +67,7 @@
 
             <div class="form-group">
                 <label for="userPhone">Número de Teléfono / WhatsApp:</label>
-                <input type="tel" id="userPhone" class="pro-input" placeholder="Ej. 0414-1234567">
+                <input type="tel" id="userPhone" class="pro-input" placeholder="Ej. 0424-1593168">
             </div>
 
             <div class="form-group">
@@ -122,12 +122,12 @@
                 </select>
             </div>
 
-            <!-- Recuadro informativo de Pago Móvil -->
+            <!-- Recuadro informativo de Pago Móvil con tus datos reales -->
             <div id="paymentInfoBox" class="payment-info-box" style="background: #fffbeb; border: 1px solid #f59e0b; padding: 14px; border-radius: 8px; margin: 15px 0; font-size: 13px; color: #92400e; line-height: 1.6; width: 100%; box-sizing: border-box;">
                 <strong style="display: block; margin-bottom: 6px;">📲 Datos para realizar tu Pago Móvil:</strong>
                 • <strong>Banco:</strong> Banco Nacional de Crédito (0191)<br>
-                • <strong>Teléfono:</strong> 0414-XXXXXXX<br>
-                • <strong>Cédula:</strong> V-XXXXXXXX
+                • <strong>Teléfono:</strong> 0424-1593168<br>
+                • <strong>Cédula:</strong> V-25887840
             </div>
 
             <div class="form-group" style="margin-top: 15px;">
@@ -161,80 +161,4 @@
 
             <div class="form-group">
                 <label for="paymentRef">Referencia de Pago (Últimos 4 dígitos):</label>
-                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
-            </div>
-
-            <div class="form-group">
-                <label for="paymentReceipt">Adjuntar Capture del Comprobante:</label>
-                <input type="file" id="paymentReceipt" class="pro-file" accept="image/*">
-            </div>
-
-            <div class="total-display">
-                <span>Total a Pagar:</span>
-                <strong id="totalPrice">300 Bs.f</strong>
-            </div>
-
-            <button id="buyButton" class="btn-pro">Confirmar y Enviar Pago</button>
-        </section>
-
-        <!-- Sorteos Oficiales Avalados -->
-        <section class="official-draws">
-            <h3>SORTEOS OFICIALES AVALADOS</h3>
-            <p>Nuestros sorteos se basan en la lotería oficial del Estado Táchira</p>
-            <div class="draws-badges">
-                <div class="badge-item">🏛️ Lotería del Táchira</div>
-                <div class="badge-item">⭐ Super Gana</div>
-                <div class="badge-item">🎯 Conalot</div>
-                <div class="badge-item">🌐 SUR Rifas</div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 SSINTERNACIONAL C.A. Todos los derechos reservados.</p>
-    </footer>
-
-    <!-- MODAL DE ÉXITO Y PREVISUALIZACIÓN DE BOLETOS -->
-    <div id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
-        <div style="background: #ffffff; max-width: 500px; width: 100%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            
-            <div style="background: #0f172a; color: #f8fafc; padding: 20px; text-align: center;">
-                <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #fbbf24;">S&S INTERNACIONAL C.A.</h3>
-                <p style="margin: 5px 0 0 0; font-size: 13px; color: #94a3b8;">¡Solicitud de Participación Registrada!</p>
-            </div>
-            
-            <div style="padding: 20px; max-height: 70vh; overflow-y: auto;">
-                <div style="background: #ecfdf5; border: 1px solid #10b981; color: #065f46; padding: 10px 15px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; text-align: center; font-weight: 600;">
-                    ✅ ¡Tus números han sido apartados con éxito!
-                </div>
-                
-                <div style="font-size: 14px; color: #334155; line-height: 1.6;">
-                    <p style="margin: 6px 0;"><strong>Participante:</strong> <span id="modalName"></span></p>
-                    <p style="margin: 6px 0;"><strong>Cédula:</strong> <span id="modalCedula"></span></p>
-                    <p style="margin: 6px 0;"><strong>Cantidad de Boletos:</strong> <span id="modalQty"></span></p>
-                    <p style="margin: 6px 0;"><strong>Estatus:</strong> <span style="color: #d97706; font-weight: bold;">Pendiente de Verificación</span></p>
-                </div>
-
-                <div style="margin-top: 15px;">
-                    <label style="font-size: 13px; font-weight: bold; color: #475569; display: block; margin-bottom: 5px;">Tus Números Asignados (Previsualización):</label>
-                    <div id="modalNumbers" style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #1e293b; max-height: 120px; overflow-y: auto; text-align: center; word-break: break-all;">
-                        Cargando números...
-                    </div>
-                </div>
-
-                <p style="font-size: 12px; color: #64748b; margin-top: 15px; text-align: center;">
-                    * Tu compra pasará a revisión. Una vez verificado el pago, tu estatus cambiará a Aprobado.
-                </p>
-            </div>
-
-            <div style="background: #f1f5f9; padding: 15px 20px; text-align: center;">
-                <button onclick="closeSuccessModal()" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer;">
-                    Entendido / Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
+                <input type="text" id="paymentRef" class="pro-input" placeholder="Ej. 4892" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0
