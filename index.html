@@ -272,7 +272,6 @@
             }
         });
 
-        // Escuchar cambios de forma múltiple (change e input) para evitar bloqueos
         document.addEventListener("DOMContentLoaded", () => {
             const select = document.getElementById("ticketQuantity");
             if (select) {
@@ -290,7 +289,11 @@
                     const userPhone = document.getElementById("userPhone").value.trim();
                     const userState = document.getElementById("userState").value;
                     const ticketQuantity = document.getElementById("ticketQuantity").value;
-                    const sourceBank = document.getElementById("sourceBank").value;
+                    
+                    // AQUÍ ESTÁ EL CAMBIO CLAVE: Capturamos el texto completo del banco seleccionado (ej. "0157 - DelSur...")
+                    const sourceBankSelect = document.getElementById("sourceBank");
+                    const sourceBank = sourceBankSelect.options[sourceBankSelect.selectedIndex].text;
+                    
                     const paymentRef = document.getElementById("paymentRef").value.trim();
                     const paymentReceipt = document.getElementById("paymentReceipt");
 
