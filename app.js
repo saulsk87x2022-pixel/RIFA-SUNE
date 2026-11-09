@@ -1,5 +1,5 @@
-// URL de tu Google Apps Script actualizada
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx2-x-lwkXrAfic_MPDO1W7D3ZThKX8tS5-gJtRs2E2fSVdLE8QksT30ojGb34QbIIg/exec";
+// URL de tu Google Apps Script actualizada y unificada
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-LaRYkjPs9OUiRU8a3YINeQb7hZlszij4X-QSiwor1Oxl00SyUGZZWPTnGChycAiVGA/exec";
 
 // 1. Cargar stock inicial y activar el selector de precios dinámico
 window.addEventListener('DOMContentLoaded', async () => {
