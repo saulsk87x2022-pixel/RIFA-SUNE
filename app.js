@@ -1,59 +1,110 @@
-// --- EVENTO PARA EL BOTÓN DE CONFIRMAR Y ENVIAR PAGO ---
+// URL de tu Google Apps Script actualizada con la nueva versión
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxnvMohWqGUoGxrCtuyQrk3-837iESdwqAxjFLbXgpvC-Ffcox3Q3q9ScVnvw0on10FqA/exec";
+
+// 1. Cargar stock inicial al abrir la página
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch(WEB_APP_URL + "?action=getStock");
+        const data = await response.json();
+        const stockElement = document.getElementById("stockCount");
+        if (stockElement) stockElement.innerText = data.stock || 9949;
+    } catch (e) {
+        console.log("Stock por defecto cargado");
+    }
+
+    // Configurar selector de precios dinámico
+    const quantitySelect = document.getElementById("ticketQuantity");
+    const totalPriceElement = document.getElementById("totalPrice");
+    if (quantitySelect && totalPriceElement) {
+        const prices = { "10": "300 Bs.f", "20": "600 Bs.f", "30": "900 Bs.f", "50": "1,500 Bs.f", "100": "3,000 Bs.f" };
+        quantitySelect.addEventListener("change", () => {
+            totalPriceElement.innerText = prices[quantitySelect.value] || "300 Bs.f";
+        });
+        totalPriceElement.innerText = prices[quantitySelect.value] || "300 Bs.f";
+    }
+});
+
+// 2. Envío del formulario sin bloqueos CORS hacia Google Sheets
 document.addEventListener("DOMContentLoaded", () => {
-    // Buscamos el botón de pago por su texto en la página
-    const botones = document.querySelectorAll("button");
-    let btnConfirmar = null;
-    
-    botones.forEach(btn => {
-        if (btn.textContent.includes("Confirmar y Enviar Pago")) {
-            btnConfirmar = btn;
-        }
-    });
+    const buyButton = document.getElementById("buyButton");
+    if (buyButton) {
+        buyButton.addEventListener("click", async function(event) {
+            event.preventDefault();
 
-    if (btnConfirmar) {
-        btnConfirmar.addEventListener("click", async (e) => {
-            e.preventDefault(); // Evita recargas si está dentro de un formulario
-            
-            // Capturamos los datos del formulario en pantalla
-            const selectBanco = document.querySelector("select");
-            const inputReferencia = document.querySelector("input[type='text'], input[type='number']");
-            
-            const banco = selectBanco ? selectBanco.value : "Banco de Venezuela";
-            const referencia = inputReferencia ? inputReferencia.value : "";
-            const monto = "300 Bs.f"; // O el valor correspondiente de tu lógica
+            const fullName = document.getElementById("fullName")?.value.trim();
+            const userCedula = document.getElementById("userCedula")?.value.trim();
+            const userPhone = document.getElementById("userPhone")?.value.trim() || "";
+            const userState = document.getElementById("userState")?.value || "";
+            const ticketQuantity = document.getElementById("ticketQuantity")?.value || "10";
+            const sourceBank = document.getElementById("sourceBank")?.value || "";
+            const paymentRef = document.getElementById("paymentRef")?.value.trim();
 
-            // Validación simple
-            if (!referencia || referencia.trim() === "") {
-                alert("Por favor ingresa los datos de la referencia de pago.");
+            if (!fullName || !userCedula || !paymentRef || paymentRef.length !== 4) {
+                alert("Completa tu Nombre, Cédula y asegúrate de que la Referencia tenga exactamente 4 dígitos.");
                 return;
             }
 
-            const datosCompra = {
-                banco: banco,
-                referencia: referencia,
-                monto: monto
-            };
+            const btn = document.getElementById("buyButton");
+            const originalText = btn.innerText;
+            btn.innerText = "Procesando...";
+            btn.disabled = true;
+
+            const formData = new URLSearchParams({
+                fullName,
+                userCedula,
+                userPhone,
+                userState,
+                ticketQuantity,
+                sourceBank,
+                paymentRef
+            });
 
             try {
-                // Enviamos los datos a tu Google Apps Script
                 await fetch(WEB_APP_URL, {
                     method: "POST",
                     mode: "no-cors",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(datosCompra)
+                    body: formData,
+                    keepalive: true
                 });
 
-                alert("¡Pago enviado con éxito! Los datos se guardaron en Google Sheet.");
-                
-                // Limpiar el campo de referencia opcionalmente
-                if (inputReferencia) inputReferencia.value = "";
+                // Generar boletos aleatorios para mostrarlos de inmediato en el modal
+                const mockNumbers = generateRandomTickets(parseInt(ticketQuantity));
+                setTimeout(() => {
+                    showSuccessPopup({ fullName, userCedula, ticketQuantity }, mockNumbers);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }, 800);
 
             } catch (error) {
-                console.error("Error al registrar el pago:", error);
-                alert("Hubo un error al conectar con el servidor.");
+                console.error("Error:", error);
+                alert("Error al procesar la solicitud.");
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         });
     }
 });
+
+function generateRandomTickets(qty) {
+    let nums = [];
+    while(nums.length < qty) {
+        let rand = ("0000" + Math.floor(Math.random() * 10000)).slice(-4);
+        if(!nums.includes(rand)) nums.push(rand);
+    }
+    return nums.join(", ");
+}
+
+// 3. Mostrar el modal con los datos de la compra
+function showSuccessPopup(formData, assignedNumbers) {
+    document.getElementById('modalName').innerText = formData.fullName;
+    document.getElementById('modalCedula').innerText = formData.userCedula;
+    document.getElementById('modalQty').innerText = formData.ticketQuantity;
+    document.getElementById('modalNumbers').innerText = assignedNumbers;
+    document.getElementById('successModal').style.display = 'flex';
+}
+
+// 4. Cerrar modal y refrescar
+function closeSuccessModal() {
+    document.getElementById('successModal').style.display = 'none';
+    location.reload();
+}
