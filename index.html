@@ -222,4 +222,190 @@
                     </div>
                 </div>
 
-                <p style="font-size:
+                <p style="font-size: 12px; color: #64748b; margin-top: 15px; text-align: center;">
+                    * Tu compra pasará a revisión. Una vez verificado el pago, tu estatus cambiará a Aprobado.
+                </p>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 15px 20px; text-align: center;">
+                <button onclick="closeSuccessModal()" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer;">
+                    Entendido / Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT JS COMPLETO E INTEGRADO -->
+    <script>
+        // URL OFICIAL CONFIGURADA
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzNwV_oJs6RJAl6LGtadNCV2QGiCW8JzFtrHf8E1gc8SKrMmLSsXsAxpPmLJsRQPhvT2w/exec";
+
+        const prices = { 
+            "10": "300 Bs.f", 
+            "20": "600 Bs.f", 
+            "30": "900 Bs.f", 
+            "50": "1,500 Bs.f", 
+            "100": "3,000 Bs.f" 
+        };
+
+        const priceValues = { 
+            "10": 300, 
+            "20": 600, 
+            "30": 900, 
+            "50": 1500, 
+            "100": 3000 
+        };
+
+        function actualizarPrecio() {
+            const select = document.getElementById("ticketQuantity");
+            const totalPriceElement = document.getElementById("totalPrice");
+            if (select && totalPriceElement) {
+                const val = select.value;
+                totalPriceElement.innerText = prices[val] || "300 Bs.f";
+            }
+        }
+
+        // Cargar stock y forzar la lectura del precio inicial
+        window.addEventListener('DOMContentLoaded', async () => {
+            actualizarPrecio();
+
+            try {
+                const response = await fetch(WEB_APP_URL + "?action=getStock");
+                const data = await response.json();
+                const stockElement = document.getElementById("stockCount");
+                if (stockElement) {
+                    stockElement.innerText = data.stock !== undefined ? data.stock : 9999;
+                }
+            } catch (e) {
+                console.log("No se pudo cargar el stock en tiempo real.");
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const select = document.getElementById("ticketQuantity");
+            if (select) {
+                select.addEventListener("change", actualizarPrecio);
+                select.addEventListener("input", actualizarPrecio);
+            }
+
+            const buyButton = document.getElementById("buyButton");
+            if (buyButton) {
+                buyButton.addEventListener("click", async function(event) {
+                    event.preventDefault();
+
+                    const fullName = document.getElementById("fullName").value.trim();
+                    const userCedula = document.getElementById("userCedula").value.trim();
+                    const userPhone = document.getElementById("userPhone").value.trim();
+                    const userState = document.getElementById("userState").value;
+                    const ticketQuantity = document.getElementById("ticketQuantity").value;
+                    
+                    const sourceBankSelect = document.getElementById("sourceBank");
+                    const sourceBank = sourceBankSelect.options[sourceBankSelect.selectedIndex].text;
+                    
+                    const paymentRef = document.getElementById("paymentRef").value.trim();
+                    const paymentReceipt = document.getElementById("paymentReceipt");
+
+                    if (!fullName) {
+                        alert("Por favor ingresa tu Nombre y Apellido.");
+                        document.getElementById("fullName").focus();
+                        return;
+                    }
+                    if (!userCedula) {
+                        alert("Por favor ingresa tu Cédula de Identidad.");
+                        document.getElementById("userCedula").focus();
+                        return;
+                    }
+                    if (!userPhone) {
+                        alert("Por favor ingresa tu Teléfono o WhatsApp.");
+                        document.getElementById("userPhone").focus();
+                        return;
+                    }
+                    if (!userState) {
+                        alert("Por favor selecciona tu Estado de procedencia.");
+                        document.getElementById("userState").focus();
+                        return;
+                    }
+                    if (!paymentRef || paymentRef.length !== 4) {
+                        alert("La referencia de pago debe tener exactamente los últimos 4 dígitos.");
+                        document.getElementById("paymentRef").focus();
+                        return;
+                    }
+                    if (!paymentReceipt.files || paymentReceipt.files.length === 0) {
+                        alert("Por favor adjunta el capture del comprobante de pago.");
+                        paymentReceipt.focus();
+                        return;
+                    }
+
+                    const btn = buyButton;
+                    const originalText = btn.innerText;
+                    btn.innerText = "Procesando...";
+                    btn.disabled = true;
+
+                    const mockNumbers = generateRandomTickets(parseInt(ticketQuantity));
+                    const montoCalculado = priceValues[ticketQuantity] || 300;
+
+                    const queryParams = new URLSearchParams({
+                        fullName: fullName,
+                        userCedula: userCedula,
+                        userPhone: userPhone,
+                        userState: userState,
+                        ticketQuantity: ticketQuantity,
+                        monto: montoCalculado,
+                        sourceBank: sourceBank,
+                        paymentRef: paymentRef,
+                        boletos: mockNumbers
+                    });
+
+                    try {
+                        await fetch(`${WEB_APP_URL}?${queryParams.toString()}`, {
+                            method: "GET",
+                            mode: "no-cors"
+                        });
+
+                        setTimeout(() => {
+                            showSuccessPopup({ fullName, userCedula, ticketQuantity }, mockNumbers);
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        }, 1000);
+
+                    } catch (error) {
+                        console.error("Error al enviar los datos:", error);
+                        alert("Hubo un error al procesar la solicitud con el servidor.");
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            }
+        });
+
+        function generateRandomTickets(qty) {
+            let nums = [];
+            while(nums.length < qty) {
+                let rand = ("0000" + Math.floor(Math.random() * 10000)).slice(-4);
+                if(!nums.includes(rand)) nums.push(rand);
+            }
+            return nums.join(", ");
+        }
+
+        function showSuccessPopup(formData, assignedNumbers) {
+            const modalName = document.getElementById('modalName');
+            const modalCedula = document.getElementById('modalCedula');
+            const modalQty = document.getElementById('modalQty');
+            const modalNumbers = document.getElementById('modalNumbers');
+            const successModal = document.getElementById('successModal');
+
+            if (modalName) modalName.innerText = formData.fullName;
+            if (modalCedula) modalCedula.innerText = formData.userCedula;
+            if (modalQty) modalQty.innerText = formData.ticketQuantity;
+            if (modalNumbers) modalNumbers.innerText = assignedNumbers;
+            if (successModal) successModal.style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            const successModal = document.getElementById('successModal');
+            if (successModal) successModal.style.display = 'none';
+            location.reload();
+        }
+    </script>
+</body>
+</html>
