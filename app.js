@@ -1,22 +1,32 @@
-// URL de tu Google Apps Script actual
+// URL de tu Google Apps Script desplegado
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx0nxL_P7_yJWTSJFO-wv5CqPkrUeDbYsWTOKwjqZZfFoCtcYSODy_dQkNNRxGLzNf3Hg/exec";
 
-// 1. Cargar stock real desde Google Sheets al abrir la página
+// 1. Cargar el stock real y configurar precios al abrir la página
 window.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
-        const stockElement = document.getElementById("stockCount") || document.getElementById("stock") || document.getElementById("boletosDisponibles");
-        if (stockElement) stockElement.innerText = data.stock || 9720;
+        const stockElement = document.getElementById("stockCount");
+        if (stockElement) {
+            stockElement.innerText = data.stock !== undefined ? data.stock : 9999;
+        }
     } catch (e) {
-        console.log("Usando stock por defecto");
+        console.log("No se pudo cargar el stock en tiempo real, usando valor por defecto.");
     }
 
-    // Selector de precios dinámico
-    const quantitySelect = document.getElementById("ticketQuantity") || document.getElementById("cantidad") || document.getElementById("qty");
-    const totalPriceElement = document.getElementById("totalPrice") || document.getElementById("precioTotal");
+    // Selector dinámico de precios según la cantidad de boletos
+    const quantitySelect = document.getElementById("ticketQuantity");
+    const totalPriceElement = document.getElementById("totalPrice");
+    
     if (quantitySelect && totalPriceElement) {
-        const prices = { "10": "300 Bs.f", "20": "600 Bs.f", "30": "900 Bs.f", "50": "1,500 Bs.f", "100": "3,000 Bs.f" };
+        const prices = { 
+            "10": "300 Bs.f", 
+            "20": "600 Bs.f", 
+            "30": "900 Bs.f", 
+            "50": "1,500 Bs.f", 
+            "100": "3,000 Bs.f" 
+        };
+        
         quantitySelect.addEventListener("change", () => {
             totalPriceElement.innerText = prices[quantitySelect.value] || "300 Bs.f";
         });
@@ -24,33 +34,47 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// 2. Función auxiliar para leer inputs sin importar qué ID tengan en el HTML
-function getInputValue(possibleIds) {
-    for (let id of possibleIds) {
-        const el = document.getElementById(id) || document.querySelector(`[name="${id}"]`);
-        if (el && el.value) return el.value.trim();
-    }
-    return "";
-}
-
-// 3. Envío del formulario garantizado hacia Google Sheets
+// 2. Manejo del botón de compra y envío a Google Sheets
 document.addEventListener("DOMContentLoaded", () => {
-    const buyButton = document.getElementById("buyButton") || document.getElementById("comprar") || document.querySelector("button[type='submit']");
+    const buyButton = document.getElementById("buyButton");
+    
     if (buyButton) {
         buyButton.addEventListener("click", async function(event) {
             event.preventDefault();
 
-            // Buscar los valores probando múltiples nombres de IDs comunes
-            const fullName = getInputValue(["fullName", "nombre", "name", "txtNombre"]);
-            const userCedula = getInputValue(["userCedula", "cedula", "dni", "txtCedula"]);
-            const userPhone = getInputValue(["userPhone", "telefono", "phone", "celular"]) || "S/T";
-            const userState = getInputValue(["userState", "estado", "region"]) || "N/A";
-            const ticketQuantity = getInputValue(["ticketQuantity", "cantidad", "qty"]) || "10";
-            const sourceBank = getInputValue(["sourceBank", "banco", "bank"]) || "N/A";
-            const paymentRef = getInputValue(["paymentRef", "referencia", "ref", "pagoRef"]);
+            // Capturar los valores directamente de los IDs de tu HTML
+            const fullName = document.getElementById("fullName").value.trim();
+            const userCedula = document.getElementById("userCedula").value.trim();
+            const userPhone = document.getElementById("userPhone").value.trim();
+            const userState = document.getElementById("userState").value;
+            const ticketQuantity = document.getElementById("ticketQuantity").value;
+            const sourceBank = document.getElementById("sourceBank").value;
+            const paymentRef = document.getElementById("paymentRef").value.trim();
 
-            if (!fullName || !userCedula || !paymentRef || paymentRef.length !== 4) {
-                alert("Por favor completa tu Nombre, Cédula y asegúrate de que la Referencia tenga exactamente 4 dígitos.");
+            // Validaciones básicas de seguridad
+            if (!fullName) {
+                alert("Por favor ingresa tu Nombre y Apellido.");
+                document.getElementById("fullName").focus();
+                return;
+            }
+            if (!userCedula) {
+                alert("Por favor ingresa tu Cédula de Identidad.");
+                document.getElementById("userCedula").focus();
+                return;
+            }
+            if (!userPhone) {
+                alert("Por favor ingresa tu Teléfono o WhatsApp.");
+                document.getElementById("userPhone").focus();
+                return;
+            }
+            if (!userState) {
+                alert("Por favor selecciona tu Estado de procedencia.");
+                document.getElementById("userState").focus();
+                return;
+            }
+            if (!paymentRef || paymentRef.length !== 4) {
+                alert("La referencia de pago debe tener exactamente los últimos 4 dígitos.");
+                document.getElementById("paymentRef").focus();
                 return;
             }
 
@@ -59,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.innerText = "Procesando...";
             btn.disabled = true;
 
-            // Construir los parámetros exactos para Google Sheets
+            // Construir los parámetros exactos requeridos por Google Apps Script
             const queryParams = new URLSearchParams({
                 fullName: fullName,
                 userCedula: userCedula,
@@ -71,13 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                // Enviar la información directamente a Google Sheets mediante GET (`no-cors`)
+                // Envío mediante GET con no-cors para evitar bloqueos de seguridad del navegador
                 await fetch(`${WEB_APP_URL}?${queryParams.toString()}`, {
                     method: "GET",
                     mode: "no-cors"
                 });
 
-                // Generar boletos aleatorios únicos para el modal
+                // Generar los boletos aleatorios únicos para la previsualización del modal
                 const mockNumbers = generateRandomTickets(parseInt(ticketQuantity));
                 
                 setTimeout(() => {
@@ -87,8 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 1000);
 
             } catch (error) {
-                console.error("Error al enviar:", error);
-                alert("Error al procesar la solicitud con el servidor.");
+                console.error("Error al enviar los datos:", error);
+                alert("Hubo un error al procesar la solicitud con el servidor.");
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
@@ -96,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Función para generar números de boletos únicos de 4 dígitos
 function generateRandomTickets(qty) {
     let nums = [];
     while(nums.length < qty) {
@@ -105,12 +130,13 @@ function generateRandomTickets(qty) {
     return nums.join(", ");
 }
 
+// Mostrar el modal de éxito con los datos del comprador
 function showSuccessPopup(formData, assignedNumbers) {
-    const modalName = document.getElementById('modalName') || document.getElementById('mNombre');
-    const modalCedula = document.getElementById('modalCedula') || document.getElementById('mCedula');
-    const modalQty = document.getElementById('modalQty') || document.getElementById('mCantidad');
-    const modalNumbers = document.getElementById('modalNumbers') || document.getElementById('mBoletos');
-    const successModal = document.getElementById('successModal') || document.getElementById('modalExito');
+    const modalName = document.getElementById('modalName');
+    const modalCedula = document.getElementById('modalCedula');
+    const modalQty = document.getElementById('modalQty');
+    const modalNumbers = document.getElementById('modalNumbers');
+    const successModal = document.getElementById('successModal');
 
     if (modalName) modalName.innerText = formData.fullName;
     if (modalCedula) modalCedula.innerText = formData.userCedula;
@@ -119,8 +145,9 @@ function showSuccessPopup(formData, assignedNumbers) {
     if (successModal) successModal.style.display = 'flex';
 }
 
+// Cerrar el modal y refrescar la página para actualizar el stock visible
 function closeSuccessModal() {
-    const successModal = document.getElementById('successModal') || document.getElementById('modalExito');
+    const successModal = document.getElementById('successModal');
     if (successModal) successModal.style.display = 'none';
     location.reload();
 }
