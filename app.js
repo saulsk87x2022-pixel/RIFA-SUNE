@@ -18,10 +18,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch(WEB_APP_URL + "?action=getStock");
         const data = await response.json();
         
-        if (data.availableStock !== undefined) {
+        // Leemos la propiedad "stock" que devuelve tu Apps Script
+        const stockValue = data.stock !== undefined ? data.stock : (data.availableStock !== undefined ? data.availableStock : null);
+        
+        if (stockValue !== null) {
             const stockElement = document.getElementById("stockCount");
             if (stockElement) {
-                stockElement.innerText = data.availableStock;
+                stockElement.innerText = stockValue;
             }
         }
     } catch (e) {
@@ -47,7 +50,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         };
 
         quantitySelect.addEventListener("change", updatePrice);
-        updatePrice(); // Ejecutar al cargar la página por si hay opción predeterminada
+        updatePrice();
     }
 });
 
@@ -81,7 +84,6 @@ document.getElementById("buyButton").addEventListener("click", async function(ev
         let imageBase64 = "";
         let imageName = "";
 
-        // Convertir el comprobante (capture) a Base64 si se adjuntó
         if (receiptInput && receiptInput.files && receiptInput.files[0]) {
             const file = receiptInput.files[0];
             imageName = file.name;
