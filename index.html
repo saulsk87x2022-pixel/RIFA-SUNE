@@ -47,6 +47,22 @@
             color: #92400e;
             margin-right: 6px;
         }
+        /* Estilo para los botones de copiar */
+        .copy-btn {
+            background: #f59e0b;
+            color: #fff;
+            border: none;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background: #d97706;
+        }
     </style>
 </head>
 <body>
@@ -183,12 +199,12 @@
                 </select>
             </div>
 
-            <!-- Recuadro informativo de Pago Móvil con Banco de Venezuela -->
-            <div id="paymentInfoBox" class="payment-info-box" style="background: #fffbeb; border: 1px solid #f59e0b; padding: 14px; border-radius: 8px; margin: 15px 0; font-size: 13px; color: #92400e; line-height: 1.6; width: 100%; box-sizing: border-box;">
+            <!-- Recuadro informativo de Pago Móvil con Banco de Venezuela y Botones de Copiar -->
+            <div id="paymentInfoBox" class="payment-info-box" style="background: #fffbeb; border: 1px solid #f59e0b; padding: 14px; border-radius: 8px; margin: 15px 0; font-size: 13px; color: #92400e; line-height: 1.8; width: 100%; box-sizing: border-box;">
                 <strong style="display: block; margin-bottom: 6px;">📲 Datos para realizar tu Pago Móvil:</strong>
                 • <strong>Banco:</strong> Banco de Venezuela (0102)<br>
-                • <strong>Teléfono:</strong> 0424-1593168<br>
-                • <strong>Cédula:</strong> V-25887840
+                • <strong>Teléfono:</strong> <span id="textPhone">04241593168</span> <button type="button" class="copy-btn" onclick="copyToClipboard('04241593168', this)">Copiar Teléfono</button><br>
+                • <strong>Cédula:</strong> <span id="textCedula">25887840</span> <button type="button" class="copy-btn" onclick="copyToClipboard('25887840', this)">Copiar Cédula</button>
             </div>
 
             <div class="form-group" style="margin-top: 15px;">
@@ -315,6 +331,21 @@
             "50": 1500, 
             "100": 3000 
         };
+
+        // Función para copiar datos al portapapeles con aviso visual
+        function copyToClipboard(text, buttonElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = buttonElement.innerText;
+                buttonElement.innerText = "¡Copiado!";
+                buttonElement.style.background = "#10b981";
+                setTimeout(() => {
+                    buttonElement.innerText = originalText;
+                    buttonElement.style.background = "#f59e0b";
+                }, 2000);
+            }).catch(err => {
+                console.error("Error al copiar: ", err);
+            });
+        }
 
         function actualizarPrecio() {
             const select = document.getElementById("ticketQuantity");
