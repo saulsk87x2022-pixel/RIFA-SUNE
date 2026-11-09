@@ -1,16 +1,6 @@
 // URL de tu Google Apps Script actualizada
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx2-x-lwkXrAfic_MPDO1W7D3ZThKX8tS5-gJtRs2E2fSVdLE8QksT30ojGb34QbIIg/exec";
 
-// Función auxiliar para convertir la imagen del capture a Base64
-const convertFileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-    });
-};
-
 // 1. Cargar stock inicial y activar el selector de precios dinámico
 window.addEventListener('DOMContentLoaded', async () => {
     // Cargar stock disponible
@@ -84,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 let imageName = "";
-
                 if (receiptInput && receiptInput.files && receiptInput.files[0]) {
                     imageName = receiptInput.files[0].name;
                 }
